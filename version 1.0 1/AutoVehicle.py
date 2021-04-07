@@ -125,7 +125,14 @@ class env():
         
         left = 1
         right = -1
-        change_left_possible = traci.vehicle.couldChangeLane(agent.ID, left, state=None)
-        change_right_possible = traci.vehicle.couldChangeLane(agent.ID, right, state=None)
+        changeLeftPossible = traci.vehicle.couldChangeLane(agent.ID, left, state=None)
+        changeRightPossible = traci.vehicle.couldChangeLane(agent.ID, right, state=None)
         _,leaderDist = trace.getLeader(self.agent.ID)
         accelerate_possible = min(self.agent.maxspeed, self.agent.spd + agent.maxacc/2) <= leaderDist
+        proposedActions = self.actionList.copy()
+        if changeLeftPossible:
+            proposedActions.remove("changeLF")
+        if changeRightPossible:
+            proposedActions.remove("changeLR")
+        if accelerate_possible == False:
+            proposedActions.remove("fast")
