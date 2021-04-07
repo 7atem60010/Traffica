@@ -41,7 +41,7 @@ def run():
     """execute the TraCI control loop"""
     step = 0
     agent = AutoVehicle.AutoVehicle("agent")
-    RB = AutoVehicle.AutoVehicle("LH")
+
 
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
@@ -58,7 +58,7 @@ def run():
         myenv = AutoVehicle.env(agent)
         myenv.PickAction()
         myenv.TakeAction( step )
-        myenv.Reward()
+        myenv.Current_state()
 
 
     traci.close()

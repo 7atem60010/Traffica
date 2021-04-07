@@ -63,6 +63,8 @@ class AutoVehicle():
 
     def wait_time(self):
         return traci.vehicle.getWaitingTime(self.ID)
+    def next_TL(self):
+        return traci.vehicle.getNextTLS(self.ID)
 
     ############ end  #################
 
@@ -119,4 +121,14 @@ class env():
         else :
             self.agent.reward += traci.lane.getLastStepVehicleNumber(self.agent.lane) - nonlane_vehicle_num
 
-        print("Reward :", self.agent.reward)
+        #print("Reward :", self.agent.reward)
+
+    def Current_state(self):
+        '''
+        Traffic state on the lane
+        # of cares in the lane
+        my speed
+        avg speed of the cares in my lane
+        '''
+        state =( self.agent.next_TL() , self.agent.spd , traci.lane.getLastStepMeanSpeed(self.agent.lane) )
+        print(state)
