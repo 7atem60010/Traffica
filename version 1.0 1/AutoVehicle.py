@@ -130,9 +130,10 @@ class env():
         _,leaderDist = trace.getLeader(self.agent.ID)
         accelerate_possible = min(self.agent.maxspeed, self.agent.spd + agent.maxacc/2) <= leaderDist
         proposedActions = self.actionList.copy()
-        if changeLeftPossible:
+        if changeLeftPossible == False:
             proposedActions.remove("changeLF")
-        if changeRightPossible:
+        if changeRightPossible == False:
             proposedActions.remove("changeLR")
         if accelerate_possible == False:
             proposedActions.remove("fast")
+        return proposedActions
