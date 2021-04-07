@@ -10,35 +10,30 @@ class AutoVehicle():
 
     def __init__(self, ID):
         self.ID = ID
+        self.maxspeed = traci.vehicle.getMaxSpeed(self.ID)
+        self.maxacc = traci.vehicle.getAccel(self.ID)
+        self.maxdec = traci.vehicle.getDecel(self.ID)
+        self.reward = 0
 
-    def getSpd(self):
-        self.spd = traci.vehicle.getSpeed(self.ID)
 
-    def getRoute(self):
-        try:
-            self.route = int(traci.vehicle.getRoadID(self.ID)[1])
-        except:
-            pass
-            #print("Warning,current route status: "+traci.vehicle.getRoadID(self.ID) )
+    ############################# Getter ###############################
+
     def getPose(self):
         lane_pose = traci.vehicle.getLanePosition(self.ID)
-        self.pose = lane_pose + self.route*1000
+        self.pose = lane_pose + self.route * 500
 
-    def getAcc(self):
+
+    def UpdateStatus(self):
+        self.spd = traci.vehicle.getSpeed(self.ID)
         self.accel = traci.vehicle.getAcceleration(self.ID)
-    def getL(self):
-        self.lane = traci.vehicle.getLaneIndex(self.ID)
-    def chL(self,L):
-        traci.vehicle.changeLane(self.ID,L, SimTime)
-    def acc(self,spd,t):
-        traci.vehicle.slowDown(self.ID,spd,t)
-    def revertSpd(self):
-        traci.vehicle.setSpeed(self.ID,-1)
+        self.lane = traci.vehicle.getLaneID(self.ID)
+        self.edge = traci.vehicle.getRoadID(self.ID)
+
 
    ########################################## Actions Functions ##########################################
 
     # WHat is SimTime? / Get SimTime!
-    def changeLane (self , input = 'right'  , simTime = 10):
+    def changeLane (self , input = 'right'  , simTime = 10 ):
         #lane = traci.vehicle.getLaneIndex(self.ID)
         if input == 'right':
             traci.vehicle.changeLane(self.ID, 1, simTime)
@@ -48,44 +43,80 @@ class AutoVehicle():
 
     # At some point this function should take the acceleration to set speed by using it.
     # Changing the speed that way is not realistic  !
-    def changeSpeed(self , speed = 10 ):
-        traci.vehicle.setSpeed(self.ID , speed)
+    def changeSpeed(self ,  input = "slow"  ):
+        """
+        In this function we change the speed of the car by the following procedure :
+         fast : newspeed = 1.3*oldspeed
+         slow : newspeed = 0.7*oldspeed
+         stop : newspeed = 0
+        """
+        self.UpdateStatus()
+        if input == "fast":
+            traci.vehicle.setSpeed(self.ID , max(1.3 * self.spd ,60))
+        if input == "slow":
+            traci.vehicle.setSpeed(self.ID , max(0.5 * self.spd ,30))
+        if input == "stop":
+            traci.vehicle.setSpeed(self.ID , 0)
+
+    def isStop(self):
+        return traci.vehicle.isStopped(self.ID)
 
     def wait_time(self):
         return traci.vehicle.getWaitingTime(self.ID)
 
     ############ end  #################
 
+#######################################################################################################################3
 
 class env():
     def __init__(self ,vehicleAgent): # vehicle agent is an instant from Auto-vehicle class
-        self.ActionsList = ["ChangeLR" , "ChangeLF" ,"ChangeS","DoNothing"]
-        self.ActionsDict = {"ChangeLR":0,"ChangeS":1,"DoNothing":2}
+        self.ActionsList = ["ChangeLR" , "ChangeLF" ,"fast" , "slow" , "stop" ,"DoNothing"]
+        self.ActionsDict = {"ChangeLR":0,"ChangeLF":1 , "fast" : 2 , "slow":3 , "stop":4 ,"DoNothing":5}
         self.agent = vehicleAgent
 
-    def takeAction(self , step):
+    def TakeAction(self , step):
 
         if self.Action=="ChangeLR":
             self.agent.changeLane("right"  , step)
-            print("Hey , env action to right lane")
+            #print("Hey , env action to right lane")
 
         if self.Action=="ChangeLF":
             self.agent.changeLane("left"  , step)
-            print("Hey , env action to left lane")
+            #print("Hey , env action to left lane")
 
-        elif self.Action=="ChangeS":
-            self.agent.changeSpeed()
+        if self.Action=="fast":
+            self.agent.changeSpeed(self.Action)
+            #print("Hey , I am faster")
+
+        if self.Action=="slow":
+            self.agent.changeSpeed(self.Action)
+            #print("Hey , I am slower")
+
+        if self.Action=="stop":
+            self.agent.changeSpeed(self.Action)
+            #print("Hey , I stopped")
+
         elif self.Action=="DoNothing":
             pass
 
-    def pickAction(self): # Random policy to take an action
+    def PickAction(self): # Random policy to take an action
         self.Action = self.ActionsList[randrange(len(self.ActionsList))]
 
-    def evaluate(self):
+    def Reward(self):
 
-        waiting_time =  self.agent.wait_time()
-        print(waiting_time)
-        if waiting_time == 0:
-            self.reward = 10
+        self.agent.UpdateStatus()
+        self.agent.reward = 0
+        if self.agent.isStop() == False:
+            self.agent.reward +=1
 
+        self.agent.reward -= self.agent.wait_time()
 
+        self.agent.reward += (self.agent.spd/self.agent.maxspeed) * 10
+
+        nonlane_vehicle_num = traci.edge.getLastStepVehicleNumber(self.agent.edge)-traci.lane.getLastStepVehicleNumber(self.agent.lane)
+        if traci.lane.getLastStepVehicleNumber(self.agent.lane) == max(traci.lane.getLastStepVehicleNumber(self.agent.lane) , nonlane_vehicle_num):
+            self.agent.reward += traci.lane.getLastStepVehicleNumber(self.agent.lane) - nonlane_vehicle_num
+        else :
+            self.agent.reward += traci.lane.getLastStepVehicleNumber(self.agent.lane) - nonlane_vehicle_num
+
+        print("Reward :", self.agent.reward)

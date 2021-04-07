@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 06 أبر, 2021 09:58:20 م by Eclipse SUMO GUI Version v1_8_0+0922-7b2bbb9a60
+<!-- generated on 07 أبر, 2021 03:10:13 ص by Eclipse SUMO GUI Version v1_8_0+0922-7b2bbb9a60
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -23,7 +23,7 @@
     </report>
 
     <traci_server>
-        <remote-port value="47431"/>
+        <remote-port value="51171"/>
     </traci_server>
 
 </configuration>
@@ -31,5 +31,7 @@
 
 <tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
     <tripinfo id="LH" depart="0.00" departLane="52o_0" departPos="7.10" departSpeed="0.00" departDelay="0.00" arrival="94.00" arrivalLane="51i_1" arrivalPos="10.00" arrivalSpeed="10.91" duration="94.00" routeLength="1013.10" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="17.84" rerouteNo="0" devices="tripinfo_LH" vType="typeNS" speedFactor="0.94" vaporized=""/>
-    <tripinfo id="agent" depart="0.00" departLane="51o_0" departPos="5.10" departSpeed="0.00" departDelay="0.00" arrival="110.00" arrivalLane="52i_0" arrivalPos="10.00" arrivalSpeed="10.00" duration="110.00" routeLength="1015.10" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="36.34" rerouteNo="0" devices="tripinfo_agent" vType="typeWE" speedFactor="1.06" vaporized=""/>
-</tripinfos>
+    <tripinfo id="D1" depart="3.00" departLane="51o_0" departPos="7.10" departSpeed="0.00" departDelay="3.00" arrival="108.00" arrivalLane="52i_1" arrivalPos="10.00" arrivalSpeed="11.72" duration="105.00" routeLength="1013.10" waitingTime="3.00" waitingCount="1" stopTime="0.00" timeLoss="34.01" rerouteNo="0" devices="tripinfo_D1" vType="typeNS" speedFactor="1.01" vaporized=""/>
+    <tripinfo id="D2" depart="7.00" departLane="51o_0" departPos="5.10" departSpeed="0.00" departDelay="7.00" arrival="110.00" arrivalLane="52i_1" arrivalPos="10.00" arrivalSpeed="12.42" duration="103.00" routeLength="1015.10" waitingTime="3.00" waitingCount="1" stopTime="0.00" timeLoss="30.06" rerouteNo="0" devices="tripinfo_D2" vType="typeWE" speedFactor="1.08" vaporized=""/>
+    <tripinfo id="agent" depart="0.00" departLane="51o_0" departPos="5.10" departSpeed="0.00" departDelay="0.00" arrival="305.00" arrivalLane="52i_1" arrivalPos="10.00" arrivalSpeed="3.50" duration="305.00" routeLength="1015.10" waitingTime="86.00" waitingCount="30" stopTime="0.00" timeLoss="231.70" rerouteNo="0" devices="tripinfo_agent" vType="typeWE" speedFactor="1.06" vaporized=""/>
+</</tripinfos>
