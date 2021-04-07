@@ -121,6 +121,7 @@ class env():
         else :
             self.agent.reward += traci.lane.getLastStepVehicleNumber(self.agent.lane) - nonlane_vehicle_num
 
+<<<<<<< HEAD
         #print("Reward :", self.agent.reward)
 
     def Current_state(self):
@@ -132,3 +133,23 @@ class env():
         '''
         state =( self.agent.next_TL() , self.agent.spd , traci.lane.getLastStepMeanSpeed(self.agent.lane) )
         print(state)
+=======
+        print("Reward :", self.agent.reward)
+
+    def getFeasibleActions(self):
+        
+        left = 1
+        right = -1
+        changeLeftPossible = traci.vehicle.couldChangeLane(agent.ID, left, state=None)
+        changeRightPossible = traci.vehicle.couldChangeLane(agent.ID, right, state=None)
+        _,leaderDist = trace.getLeader(self.agent.ID)
+        accelerate_possible = min(self.agent.maxspeed, self.agent.spd + agent.maxacc/2) <= leaderDist
+        proposedActions = self.actionList.copy()
+        if changeLeftPossible == False:
+            proposedActions.remove("changeLF")
+        if changeRightPossible == False:
+            proposedActions.remove("changeLR")
+        if accelerate_possible == False:
+            proposedActions.remove("fast")
+        return proposedActions
+>>>>>>> 4b2e0f04656233a1d5487993a8c9766c85cdfbf1
