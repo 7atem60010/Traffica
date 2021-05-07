@@ -1,3 +1,5 @@
+import sys , os
+sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), 'tools'))
 
 import traci
 from random import randrange
@@ -20,7 +22,24 @@ class AutoVehicle:
 
     def getPose(self):
         lane_pose = traci.vehicle.getLanePosition(self.ID)
-        self.pose = lane_pose + self.route * 500
+        print(lane_pose)
+        position=traci.vehicle.getPosition(self.ID)
+        #print(position)
+        pos = traci.vehicle.getLateralLanePosition(self.ID)
+        #print(pos)
+
+        #self.pose = lane_pose + self.route * 500
+
+    def getBoxintersection(self):
+        lane_pose = traci.vehicle.getLanePosition(self.ID)
+        edge_id  = traci.vehicle.getRoadID(self.ID)
+        position = traci.vehicle.getPosition(self.ID)
+        #print(position)
+        #and edge_id in [":0_9" , ":0_1" , ":0_5" ,":0_13" , ":0_8" , ":0_0" , ":0_12" , ":0_4"]
+        if lane_pose >0 and lane_pose<20 and position[0]>500 and edge_id in [":0_9" , ":0_1" , ":0_5" ,":0_13" , ":0_8" , ":0_0" , ":0_12" , ":0_4"]:
+            print(lane_pose )
+            print("I am in intersection" )
+            print("I am in position" , round(lane_pose/5 ),"in edge" , edge_id)
 
 
     def UpdateStatus(self):

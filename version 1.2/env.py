@@ -1,3 +1,6 @@
+import sys , os
+sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), 'tools'))
+
 import traci
 import random
 from random import randrange
@@ -7,6 +10,8 @@ class env():
         self.ActionsList = ["ChangeLR", "ChangeLF", "fast", "slow", "stop", "DoNothing"]
         self.ActionsDict = {"ChangeLR": 0, "ChangeLF": 1, "fast": 2, "slow": 3, "stop": 4, "DoNothing": 5}
         # self.agent = vehicleAgent
+        # self.ActionsList = ["acc", "dec"]
+        # self.ActionsDict = {"acc": 0, "dec": 1}
 
     def Reward(self, agent):
         try:

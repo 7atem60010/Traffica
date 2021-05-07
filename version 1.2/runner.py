@@ -27,6 +27,9 @@ def run():
     step = 0
     car = AutoVehicle.AutoVehicle("agent")
     car2 = AutoVehicle.AutoVehicle("D1")
+    car3 = AutoVehicle.AutoVehicle("D2")
+    car4 = AutoVehicle.AutoVehicle("LH")
+
     my_env = env.env()
     agent = SingleAgent.SingleAgent( my_env , car)
     agent1 = SingleAgent.SingleAgent( my_env , car2)
@@ -60,6 +63,15 @@ def run():
         # my_env.Reward(agent1)
         #except:
          #   pass
+        #car.getPose()
+        #car.getBoxintersection()
+       # car2.getBoxintersection()
+        #car3.getBoxintersection()
+        car.getBoxintersection()
+
+#[:0_9 , :0_1 , :0_5 ,:0_13]
+
+
 
 
     traci.close()

@@ -1,3 +1,6 @@
+import sys , os
+sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), 'tools'))
+
 import traci
 import random
 from random import randrange
@@ -36,8 +39,8 @@ class SingleAgent():
 
     def PickAction(self ,possible_actions, current_state):
         self.Action = self.ActionsList[randrange(len(self.ActionsList))]
-        print(current_state)
-        print(possible_actions)
+        #print(current_state)
+        #print(possible_actions)
 
 
 
