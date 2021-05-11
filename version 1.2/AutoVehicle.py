@@ -24,9 +24,9 @@ class AutoVehicle:
         lane_pose = traci.vehicle.getLanePosition(self.ID)
         print(lane_pose)
         position=traci.vehicle.getPosition(self.ID)
-        #print(position)
+        print(position)
         pos = traci.vehicle.getLateralLanePosition(self.ID)
-        #print(pos)
+        print(pos)
 
         #self.pose = lane_pose + self.route * 500
 

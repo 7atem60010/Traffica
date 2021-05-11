@@ -14,6 +14,6 @@
 
         <vehicle depart="0" id="agent" route="left_up" type="typeWE" color="1,0,0"/>
         <vehicle depart="0" id="LH" route="up" type="typeNS" />
-        <vehicle depart="0" id="D1" route="left" type="typeNS" color="1,0,0"/>
+        <vehicle depart="0" id="D1" route="left_up" type="typeNS" color="1,0,0"/>
         <vehicle depart="0" id="D2" route="down" type="typeWE" />
 </routes>

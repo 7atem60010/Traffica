@@ -63,11 +63,11 @@ def run():
         # my_env.Reward(agent1)
         #except:
          #   pass
-        #car.getPose()
+        car2.getPose()
         #car.getBoxintersection()
-       # car2.getBoxintersection()
+        #car2.getBoxintersection()
         #car3.getBoxintersection()
-        car.getBoxintersection()
+        #car.getBoxintersection()
 
 #[:0_9 , :0_1 , :0_5 ,:0_13]
 
