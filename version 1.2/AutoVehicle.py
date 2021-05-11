@@ -20,6 +20,16 @@ class AutoVehicle:
 
     ############################# Getter ###############################
 
+    def printPose(self,lane_len,side_cells,intersection_width):
+        x,y = traci.vehicle.getPosition(self.ID)
+        x,y = x-lane_len,y-lane_len
+        x_i,y_i = x//(intersection_width/side_cells),y//(intersection_width/side_cells)
+        x_i,y_i = int(x_i),int(y_i)
+        if intersection_width>=x>=0 and intersection_width>=y>=0:
+            print(x_i,y_i)
+        return x_i,y_i
+
+
     def getPose(self):
         lane_pose = traci.vehicle.getLanePosition(self.ID)
         print(lane_pose)

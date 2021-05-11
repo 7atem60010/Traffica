@@ -67,7 +67,12 @@ def run():
         #car.getBoxintersection()
         #car2.getBoxintersection()
         #car3.getBoxintersection()
+<<<<<<< HEAD
         #car.getBoxintersection()
+=======
+        # car.printPose()
+        car.printPose(500,4,20)
+>>>>>>> 7cb0af0655f574ea4f16bd392a8dc4281571a705
 
 #[:0_9 , :0_1 , :0_5 ,:0_13]
 
@@ -82,6 +87,9 @@ def get_options():
     optParser = optparse.OptionParser()
     optParser.add_option("--nogui", action="store_true",
                          default=False, help="run the commandline version of sumo")
+    optParser.add_option("--start", action="store",
+                          default=0, help="skip to specific time")
+    optParser.add_option("--step", action="store",help="set the step length to simulate at")
     options, args = optParser.parse_args()
     return options
 
@@ -96,12 +104,18 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo')
     else:
         sumoBinary = checkBinary('sumo-gui')
-
+    print(sumoBinary)
     # first, generate the route file for this simulation
     #generate_routefile()
 
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
+    if options.step is None:
+        options.step = .1
+    print((options.step))
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
-                             "--tripinfo-output", "tripinfo.xml"])
+                             "--tripinfo-output", "tripinfo.xml"],
+                            #  "--step-length", 1,
+                            #  "--begin", int(1),
+    )
     run()
