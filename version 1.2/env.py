@@ -35,7 +35,7 @@ class env():
             pass
         # print("Reward :", self.agent.reward)
 
-    def Current_state(self, agent):
+    def Car_current_state(self, agent):
         '''
         Traffic state on the lane
         # of cares in the lane
