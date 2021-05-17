@@ -11,11 +11,18 @@ class AutoVehicle:
     '''
 
     def __init__(self, ID):
+        ################# Parameters ###################
+        self.maxspeed = 4 # We use cell/step convention
+        self.timestep = 0.5 # This is the step value
+        self.acc = 1   # We use cell/step^2 convention
+        self.currentspeed = 0  # We use cell/step convention
+
+        ################################################
         self.ID = ID
-        self.maxspeed = traci.vehicle.getMaxSpeed(self.ID)
-        self.maxacc = traci.vehicle.getAccel(self.ID)
-        self.maxdec = traci.vehicle.getDecel(self.ID)
-        self.reward = 0
+        traci.vehicle.setMaxSpeed(self.ID ,self.maxspeed )
+        traci.vehicle.setAccel(self.ID , self.acc)
+
+        self.DoI = 0
 
 
     ############################# Getter ###############################
@@ -34,9 +41,9 @@ class AutoVehicle:
         lane_pose = traci.vehicle.getLanePosition(self.ID)
         print(lane_pose)
         position=traci.vehicle.getPosition(self.ID)
-        #print(position)
+        print(position)
         pos = traci.vehicle.getLateralLanePosition(self.ID)
-        #print(pos)
+        print(pos)
 
         #self.pose = lane_pose + self.route * 500
 
@@ -44,6 +51,7 @@ class AutoVehicle:
         lane_pose = traci.vehicle.getLanePosition(self.ID)
         edge_id  = traci.vehicle.getRoadID(self.ID)
         position = traci.vehicle.getPosition(self.ID)
+        print(traci.lane.getWidth(traci.vehicle.getLaneID(self.ID)))
         #print(position)
         #and edge_id in [":0_9" , ":0_1" , ":0_5" ,":0_13" , ":0_8" , ":0_0" , ":0_12" , ":0_4"]
         if lane_pose >0 and lane_pose<20 and position[0]>500 and edge_id in [":0_9" , ":0_1" , ":0_5" ,":0_13" , ":0_8" , ":0_0" , ":0_12" , ":0_4"]:

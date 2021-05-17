@@ -52,7 +52,7 @@ def run():
         # myenv.TakeAction( step )
         # myenv.Current_state()
         #try:
-        current_state =  my_env.Current_state(agent)
+        current_state =  my_env.Car_current_state(agent)
         possible_actions = my_env.getFeasibleActions(agent)
         agent.PickAction(current_state , possible_actions)
         agent.TakeAction(step)
@@ -63,10 +63,11 @@ def run():
         # my_env.Reward(agent1)
         #except:
          #   pass
-        #car.getPose()
-        #car.getBoxintersection()
-       # car2.getBoxintersection()
+        #car2.getPose()
+        car.getBoxintersection()
+        #car2.getBoxintersection()
         #car3.getBoxintersection()
+        #car.getBoxintersection()
         # car.printPose()
         car.printPose(500,4,20)
 

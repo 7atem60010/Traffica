@@ -1,6 +1,6 @@
 <routes>
-        <vType id="typeWE" accel="0.8" decel="4.5" sigma="0.5" length="5" minGap="2.5" maxSpeed="100" guiShape="passenger"/>
-        <vType id="typeNS" accel="0.8" decel="4.5" sigma="0.5" length="5" minGap="3" maxSpeed="100" guiShape="bus"/>
+        <vType id="typeWE" accel="0.8" decel="4.5" sigma="0.5" length="4.5" minGap="2.5" maxSpeed="25.2" guiShape="passenger"/>
+        <vType id="typeNS" accel="0.8" decel="4.5" sigma="0.5" length="4.8" minGap="3" maxSpeed="25.2" guiShape="bus"/>
 
         <route id="right" edges="51o 1i 2o 52i" />
         <route id="right_down" edges="51o 1i 3o 53i" />
@@ -14,6 +14,6 @@
 
         <vehicle depart="0" id="agent" route="right" type="typeWE" color="1,0,0"/>
         <vehicle depart="0" id="LH" route="up" type="typeNS" />
-        <vehicle depart="0" id="D1" route="left" type="typeNS" color="1,0,0"/>
+        <vehicle depart="0" id="D1" route="left_up" type="typeNS" color="1,0,0"/>
         <vehicle depart="0" id="D2" route="down" type="typeWE" />
 </routes>
