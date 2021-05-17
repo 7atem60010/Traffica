@@ -21,7 +21,7 @@ class AutoVehicle:
         self.ID = ID
         traci.vehicle.setMaxSpeed(self.ID ,self.maxspeed )
         traci.vehicle.setAccel(self.ID , self.acc)
-
+        self.L, self.W = traci.vehicle.getLength(self.ID), traci.vehicle.getWidth(self.ID)
         self.DoI = 0
 
 
@@ -65,6 +65,8 @@ class AutoVehicle:
         self.accel = traci.vehicle.getAcceleration(self.ID)
         self.lane = traci.vehicle.getLaneID(self.ID)
         self.edge = traci.vehicle.getRoadID(self.ID)
+        self.angle = traci.vehicle.getangle(self.ID)
+        self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
 
 
    ########################################## Actions Functions ##########################################
