@@ -15,6 +15,10 @@ class env():
         self.intersection_Xlen = self.BotRight[0] - self.TopLeft[0]
         self.intersection_Ylen = self.BotRight[1] - self.TopLeft[1]
         self.cells_per_side = 24
+        self.cell_len = self.intersection_Ylen/self.cells_per_side
+        self.dT = .5 #sec
+        self.V_range = list(range(5))
+        self.A_range = [-1,0,1]
         # self.agent = vehicleAgent
         # self.ActionsList = ["acc", "dec"]
         # self.ActionsDict = {"acc": 0, "dec": 1}
@@ -25,6 +29,7 @@ class env():
         x_i,y_i = x//(self.intersection_Xlen/self.cells_per_side),y//(self.intersection_Ylen/self.cells_per_side)
         x_i,y_i = int(x_i),int(y_i)
         return x_i,y_i
+
 
     def get_current_cells(self,agent):
         angle = math.radians(agent.car.angle)
@@ -43,9 +48,22 @@ class env():
         xmin,xmax = min([cell[0] for cell in cells]),min([cell[0] for cell in cells]) 
         ymin,ymax = min([cell[1] for cell in cells]),max([cell[1] for cell in cells]) 
         container_cells = [(xmin,ymin),(xmax,ymax)]
-        vx = agent.car.speed * math.cos(angle)
-        vy = agent.car.speed * math.sin(angle)
-        return container_cells 
+        v = agent.car.speed 
+        a = agent.car.accel #TODO:
+        if v == self.V_range[-1] :
+            dc = max(math.floor(v**2/2/a),math.floor(v*self.dT))
+        elif v < self.V_range[-1]:
+            dc = max(math.floor(v**2/2/a),math.floor(v*self.dT+.5*a*self.dT))
+        else:
+            raise("Wrong value of V detected at cat",agent.car.ID)
+        dc_x = dc * math.cos(angle)
+        dc_y = dc * math.sin(angle)
+        xmin += dc_x
+        xmax += dc_x
+        ymin += dc_y
+        ymax += dc_y
+        dc_cells = [(xmin,ymin),(xmax,ymax)]
+        return container_cells,dc_cells
 
 
     def get_desired_cells(self):

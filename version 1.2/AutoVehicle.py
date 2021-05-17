@@ -36,6 +36,15 @@ class AutoVehicle:
             print(x_i,y_i)
         return x_i,y_i
 
+    def m_sec_2_cell_step(self,v):
+        m_step = v*self.dT 
+        cell_step = m_step / self.cell_len
+        if cell_step > self.V_range[-1]:
+            print("Warning, over max speed.")
+            cell_step = self.V_range[-1]
+        else:
+            cell_step = math.round(cell_step)
+        return cell_step
 
     def getPose(self):
         lane_pose = traci.vehicle.getLanePosition(self.ID)
