@@ -20,7 +20,7 @@ class AutoVehicle:
 
     ############################# Getter ###############################
 
-    def printPose(self,lane_len,side_cells,intersection_width):
+    def getCells(self,lane_len,side_cells,intersection_width):
         x,y = traci.vehicle.getPosition(self.ID)
         x,y = x-lane_len,y-lane_len
         x_i,y_i = x//(intersection_width/side_cells),y//(intersection_width/side_cells)
