@@ -45,7 +45,7 @@ class env():
         cell_BL = self.point_to_cell(back_left)
         cell_BR = self.point_to_cell(back_right)
         cells = [cell_BL,cell_BR,cell_FR,cell_FL]
-        xmin,xmax = min([cell[0] for cell in cells]),min([cell[0] for cell in cells]) 
+        xmin,xmax = min([cell[0] for cell in cells]),max([cell[0] for cell in cells]) 
         ymin,ymax = min([cell[1] for cell in cells]),max([cell[1] for cell in cells]) 
         container_cells = [(xmin,ymin),(xmax,ymax)]
         v = agent.car.speed 
