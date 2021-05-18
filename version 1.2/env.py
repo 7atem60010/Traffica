@@ -8,8 +8,8 @@ from random import randrange
 
 class env():
     def __init__(self):  # vehicle agent is an instant from Auto-vehicle class
-        self.ActionsList = ["ChangeLR", "ChangeLF", "fast", "slow", "stop", "DoNothing"]
-        self.ActionsDict = {"ChangeLR": 0, "ChangeLF": 1, "fast": 2, "slow": 3, "stop": 4, "DoNothing": 5}
+        # self.ActionsList = ["ChangeLR", "ChangeLF", "fast", "slow", "stop", "DoNothing"]
+        # self.ActionsDict = {"ChangeLR": 0, "ChangeLF": 1, "fast": 2, "slow": 3, "stop": 4, "DoNothing": 5}
         self.TopLeft = (499.50,499.50)
         self.BotRight = (520.50,520.50)
         self.intersection_Xlen = self.BotRight[0] - self.TopLeft[0]
@@ -19,9 +19,9 @@ class env():
         self.dT = .5 #sec
         self.V_range = list(range(5))
         self.A_range = [-1,0,1]
-        # self.agent = vehicleAgent
-        # self.ActionsList = ["acc", "dec"]
-        # self.ActionsDict = {"acc": 0, "dec": 1}
+
+        self.ActionsList = ["acc", "dec", "keep_going"]
+        self.ActionsDict = {"acc": 0, "dec": 1 , "keep_going" : 2}
 
     def point_to_cell(self,point):
         x,y = point[0],point[1]
@@ -110,24 +110,3 @@ class env():
             pass
         return state
 
-    def getFeasibleActions(self, agent):
-
-        left = 1
-        right = -1
-        changeLeftPossible = traci.vehicle.couldChangeLane(agent.car.ID, left, state=None)
-        changeRightPossible = traci.vehicle.couldChangeLane(agent.car.ID, right, state=None)
-        accelerate_possible = True
-        try:
-            _, leaderDist = traci.vehicle.getLeader(agent.car.ID , 10)
-            accelerate_possible = min(agent.car.maxspeed, agent.car.spd + agent.car.maxacc / 2) <= leaderDist
-        except:
-            pass
-        proposedActions = self.ActionsList.copy()
-        if changeLeftPossible == False:
-            proposedActions.remove("ChangeLF")
-        if changeRightPossible == False:
-            proposedActions.remove("ChangeLR")
-        if accelerate_possible == False:
-            proposedActions.remove("fast")
-#        print(proposedActions)
-        return proposedActions

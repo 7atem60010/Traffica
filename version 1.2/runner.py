@@ -53,8 +53,8 @@ def run():
         # myenv.Current_state()
         #try:
         current_state =  my_env.Car_current_state(agent)
-        possible_actions = my_env.getFeasibleActions(agent)
-        agent.PickAction(current_state , possible_actions)
+        #possible_actions = my_env.getFeasibleActions(agent)
+        #agent.PickAction(current_state , possible_actions)
         agent.TakeAction(step)
         my_env.Reward(agent)
         # my_env.

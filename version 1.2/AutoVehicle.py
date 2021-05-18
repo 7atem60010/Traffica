@@ -15,13 +15,18 @@ class AutoVehicle:
         ################# Parameters ###################
         self.maxspeed = 4 # We use cell/step convention
         self.timestep = 0.5 # This is the step value
-        self.acc = 1   # We use cell/step^2 convention
+        self.accl = 1   # We use cell/step^2 convention
         self.currentspeed = 0  # We use cell/step convention
 
+        ################## Dicts  ######################
+        self.speedDict = {0:0, 1: 1.75 , 2: 2.5 , 3: 5.25 , 4: 7} # Mapping from cell/step to m/s
+        self.accSumo = 3.5 # m/s^2
+
         ################################################
+        
         self.ID = ID
         traci.vehicle.setMaxSpeed(self.ID ,self.maxspeed )
-        traci.vehicle.setAccel(self.ID , self.acc)
+        traci.vehicle.setAccel(self.ID , self.accl)
         self.L, self.W = traci.vehicle.getLength(self.ID), traci.vehicle.getWidth(self.ID)
         self.DoI = 0
 
@@ -75,45 +80,27 @@ class AutoVehicle:
         self.accel = traci.vehicle.getAcceleration(self.ID)
         self.lane = traci.vehicle.getLaneID(self.ID)
         self.edge = traci.vehicle.getRoadID(self.ID)
-        self.angle = traci.vehicle.getangle(self.ID)
+        self.angle = traci.vehicle.getAngle(self.ID)
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
 
 
    ########################################## Actions Functions ##########################################
+    def acc(self):
+        if self.currentspeed < self.maxspeed:
+            traci.vehicle.slowdown(self.ID,self.speedDict[self.currentspeed+1] , self.timestep )
+            self.currentspeed += 1
+            self.accl = 1
 
-    # WHat is SimTime? / Get SimTime!
-    def changeLane (self , input = 'right'  , simTime = 10 ):
-        #lane = traci.vehicle.getLaneIndex(self.ID)
-        if input == 'right':
-            traci.vehicle.changeLane(self.ID, 1, simTime)
-        if input == 'left':
-            traci.vehicle.changeLane(self.ID, 0, simTime)
+    def dec(self):
+        if self.currentspeed > 0 :
+            traci.vehicle.slowdown(self.ID,self.speedDict[self.currentspeed-1] , self.timestep )
+            self.currentspeed -= 1
+            self.accl = -1
+
+    def keepgoing(self):
+        self.accl = 0
 
 
-    # At some point this function should take the acceleration to set speed by using it.
-    # Changing the speed that way is not realistic  !
-    def changeSpeed(self ,  input = "slow"  ):
-        """
-        In this function we change the speed of the car by the following procedure :
-         fast : newspeed = 1.3*oldspeed
-         slow : newspeed = 0.7*oldspeed
-         stop : newspeed = 0
-        """
-        self.UpdateStatus()
-        if input == "fast":
-            traci.vehicle.setSpeed(self.ID , max(1.3 * self.spd ,60))
-        if input == "slow":
-            traci.vehicle.setSpeed(self.ID , max(0.5 * self.spd ,30))
-        if input == "stop":
-            traci.vehicle.setSpeed(self.ID , 0)
-
-    def isStop(self):
-        return traci.vehicle.isStopped(self.ID)
-
-    def wait_time(self):
-        return traci.vehicle.getWaitingTime(self.ID)
-    def next_TL(self):
-        return traci.vehicle.getNextTLS(self.ID)
 
     ############ end  #################
 
