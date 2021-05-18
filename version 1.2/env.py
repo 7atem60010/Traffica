@@ -23,6 +23,8 @@ class env():
         self.ActionsList = ["acc", "dec", "keep_going"]
         self.ActionsDict = {"acc": 0, "dec": 1 , "keep_going" : 2}
 
+        self.vechilelist =[]
+
     def point_to_cell(self,point):
         x,y = point[0],point[1]
         x,y = x-self.TopLeft[0],y-self.TopLeft[1]

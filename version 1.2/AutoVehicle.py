@@ -22,14 +22,23 @@ class AutoVehicle:
         self.speedDict = {0:0, 1: 1.75 , 2: 2.5 , 3: 5.25 , 4: 7} # Mapping from cell/step to m/s
         self.accSumo = 3.5 # m/s^2
 
+        ################# Intersection dimensions ################
+        self.TopLeft = (499.50, 499.50)
+        self.BotRight = (520.50, 520.50)
         ################################################
-        
+
         self.ID = ID
         traci.vehicle.setMaxSpeed(self.ID ,self.maxspeed )
         traci.vehicle.setAccel(self.ID , self.accl)
         self.L, self.W = traci.vehicle.getLength(self.ID), traci.vehicle.getWidth(self.ID)
         self.DoI = 0
 
+    ###################################################################
+    def inIntersection(self):
+        self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
+        print(self.pos)
+        if self.pos[0] >499.50 and  self.pos[0] < 520.50 and self.pos[1] >499.50 and  self.pos[1] < 520.50:
+            return True
 
     ############################# Getter ###############################
 

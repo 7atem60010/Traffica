@@ -30,6 +30,7 @@ def run():
     car3 = AutoVehicle.AutoVehicle("D2")
     car4 = AutoVehicle.AutoVehicle("LH")
 
+    vechilelist = [car , car2 , car3 , car4]
     my_env = env.env()
     agent = SingleAgent.SingleAgent( my_env , car)
     agent1 = SingleAgent.SingleAgent( my_env , car2)
@@ -38,6 +39,11 @@ def run():
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
         step +=1
+        my_env.vechilelist = []
+        for vechile in vechilelist:
+            if vechile.inIntersection():
+                my_env.vechilelist.append(vechile)
+                print(my_env.vechilelist)
         # if step%7 == 0:
         #     print(step)
         #     agent.changeLane("left" , step)
@@ -55,8 +61,9 @@ def run():
         current_state =  my_env.Car_current_state(agent)
         #possible_actions = my_env.getFeasibleActions(agent)
         #agent.PickAction(current_state , possible_actions)
-        agent.TakeAction(step)
-        my_env.Reward(agent)
+        #agent.TakeAction(step)
+        #my_env.Reward(agent)
+
         # my_env.
         # agent1.PickAction()
         # agent1.TakeAction(step)
