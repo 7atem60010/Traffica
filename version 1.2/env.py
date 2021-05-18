@@ -26,8 +26,7 @@ class env():
     def point_to_cell(self,point):
         x,y = point[0],point[1]
         x,y = x-self.TopLeft[0],y-self.TopLeft[1]
-        x_i,y_i = x//(self.intersection_Xlen/self.cells_per_side),y//(self.intersection_Ylen/self.cells_per_side)
-        x_i,y_i = int(x_i),int(y_i)
+        x_i,y_i = x//(self.cell_len),y//(self.cell_len)
         return x_i,y_i
 
 
@@ -35,20 +34,24 @@ class env():
         angle = math.radians(agent.car.angle)
         pos = agent.car.position #position at center of front dumper
         l,w = agent.car.L, self.car.W
+
         front_left = (pos[0] + w*.5*math.cos(angle+90), pos[1] + w*.5*math.sin(angle+90))
         front_right = (pos[0] + w*.5*math.cos(angle-90), pos[1] + w*.5*math.sin(angle-90))
         pos_back = (pos[0] - l*math.cos(angle), pos[1] - l*math.sin(angle))
         back_left = (pos_back[0] + w*.5*math.cos(angle+90), pos_back[1] + w*.5*math.sin(angle+90))
         back_right = (pos_back[0] + w*.5*math.cos(angle-90), pos_back[1] + w*.5*math.sin(angle-90))
+
         cell_FL = self.point_to_cell(front_left)
         cell_FR = self.point_to_cell(front_right)
         cell_BL = self.point_to_cell(back_left)
         cell_BR = self.point_to_cell(back_right)
         cells = [cell_BL,cell_BR,cell_FR,cell_FL]
-        xmin,xmax = min([cell[0] for cell in cells]),min([cell[0] for cell in cells]) 
+
+        xmin,xmax = min([cell[0] for cell in cells]),max([cell[0] for cell in cells]) 
         ymin,ymax = min([cell[1] for cell in cells]),max([cell[1] for cell in cells]) 
         container_cells = [(xmin,ymin),(xmax,ymax)]
-        v = agent.car.speed 
+
+        v = agent.car.currentspeed 
         a = agent.car.accel #TODO:
         if v == self.V_range[-1] :
             dc = max(math.floor(v**2/2/a),math.floor(v*self.dT))
@@ -56,14 +59,14 @@ class env():
             dc = max(math.floor(v**2/2/a),math.floor(v*self.dT+.5*a*self.dT))
         else:
             raise("Wrong value of V detected at cat",agent.car.ID)
-        dc_x = dc * math.cos(angle)
-        dc_y = dc * math.sin(angle)
+        dc_x = math.ceil(dc * math.cos(angle))
+        dc_y = math.ceil(dc * math.sin(angle))
         xmin += dc_x
         xmax += dc_x
         ymin += dc_y
         ymax += dc_y
-        dc_cells = [(xmin,ymin),(xmax,ymax)]
-        return container_cells,dc_cells
+        desired_cells = [(xmin,ymin),(xmax,ymax)]
+        return container_cells,desired_cells
 
 
     def get_desired_cells(self):

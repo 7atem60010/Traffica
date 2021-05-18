@@ -2,6 +2,7 @@ import sys , os
 sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), 'tools'))
 
 import traci
+import math
 from random import randrange
 
 class AutoVehicle:
@@ -27,7 +28,7 @@ class AutoVehicle:
 
     ############################# Getter ###############################
 
-    def getCells(self,lane_len,side_cells,intersection_width):
+    def getCells(self,lane_len,side_cells,intersection_width): #retracted
         x,y = traci.vehicle.getPosition(self.ID)
         x,y = x-lane_len,y-lane_len
         x_i,y_i = x//(intersection_width/side_cells),y//(intersection_width/side_cells)
