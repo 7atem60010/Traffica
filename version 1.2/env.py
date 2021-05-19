@@ -8,8 +8,8 @@ from random import randrange
 
 class env():
     def __init__(self):  # vehicle agent is an instant from Auto-vehicle class
-        self.ActionsList = ["ChangeLR", "ChangeLF", "fast", "slow", "stop", "DoNothing"]
-        self.ActionsDict = {"ChangeLR": 0, "ChangeLF": 1, "fast": 2, "slow": 3, "stop": 4, "DoNothing": 5}
+        # self.ActionsList = ["ChangeLR", "ChangeLF", "fast", "slow", "stop", "DoNothing"]
+        # self.ActionsDict = {"ChangeLR": 0, "ChangeLF": 1, "fast": 2, "slow": 3, "stop": 4, "DoNothing": 5}
         self.TopLeft = (499.50,499.50)
         self.BotRight = (520.50,520.50)
         self.intersection_Xlen = self.BotRight[0] - self.TopLeft[0]
@@ -19,10 +19,13 @@ class env():
         self.dT = .5 #sec
         self.V_range = list(range(5))
         self.A_range = [-1,0,1]
-        self.List_intersection = []
-        # self.agent = vehicleAgent
-        # self.ActionsList = ["acc", "dec"]
-        # self.ActionsDict = {"acc": 0, "dec": 1}
+
+        self.ActionsList = ["acc", "dec", "keep_going"]
+        self.ActionsDict = {"acc": 0, "dec": 1 , "keep_going" : 2}
+
+        self.vehicleList =[]
+        self.overLap = []
+        self.states = {}
 
     def point_to_cell(self,point):
         x,y = point[0],point[1]
@@ -33,6 +36,41 @@ class env():
     def is_intersect(self):
         pass #TODO:
 
+    def updateStates(self):
+        for v in self.vehicleList:
+            cont_cells, desired_cells = self.get_current_cells(v)
+            velocity = v.currentSpeed
+            queue = v.queue
+            self.states[v.carID] = (cont_cells,desired_cells,velocity,queue)
+
+    def get_overlapping_cars(self):
+        for i,car1 in enumerate(self.vehicleList):
+            for j in range(i+1,len(self.vehicleList)):
+                car2 = self.vehicleList[j]
+                dc1 = self.states[car1][1]
+                dc2 = self.states[car2][1]
+                if self.doOverlap(dc1[0],dc1[1],dc2[0],dc2[1]):
+                    self.append(car1,car2)
+
+    def doOverlap(l1, r1, l2, r2): #geeks 4 geeks
+        
+        # To check if either rectangle is actually a line
+        # For example  :  l1 ={-1,0}  r1={1,1}  l2={0,-1}  r2={0,1}
+        
+        if (l1[0] == r1[0] or l1[1] == r2[1] or l2[0] == r2[0] or l2[1] == r2[1]): #geeks 4 geeks
+            # the line cannot have positive overlap
+            return False
+        
+        
+        # If one rectangle is on left side of other
+        if(l1[0] >= r2[0] or l2[0] >= r1[0]):
+            return False
+    
+        # If one rectangle is above other
+        if(l1[1] <= r2[1] or l2[1] <= r1[1]):
+            return False
+    
+        return True
 
     def get_current_cells(self,agent):
         angle = math.radians(agent.car.angle)
@@ -51,7 +89,7 @@ class env():
         cell_BR = self.point_to_cell(back_right)
         cells = [cell_BL,cell_BR,cell_FR,cell_FL]
 
-        xmin,xmax = min([cell[0] for cell in cells]),max([cell[0] for cell in cells]) 
+        xmin,xmax = min([cell[0] for cell in cells]),max([cell[0] for cell in cells])
         ymin,ymax = min([cell[1] for cell in cells]),max([cell[1] for cell in cells]) 
         container_cells = [(xmin,ymin),(xmax,ymax)]
 
@@ -114,24 +152,3 @@ class env():
             pass
         return state
 
-    def getFeasibleActions(self, agent):
-
-        left = 1
-        right = -1
-        changeLeftPossible = traci.vehicle.couldChangeLane(agent.car.ID, left, state=None)
-        changeRightPossible = traci.vehicle.couldChangeLane(agent.car.ID, right, state=None)
-        accelerate_possible = True
-        try:
-            _, leaderDist = traci.vehicle.getLeader(agent.car.ID , 10)
-            accelerate_possible = min(agent.car.maxspeed, agent.car.spd + agent.car.maxacc / 2) <= leaderDist
-        except:
-            pass
-        proposedActions = self.ActionsList.copy()
-        if changeLeftPossible == False:
-            proposedActions.remove("ChangeLF")
-        if changeRightPossible == False:
-            proposedActions.remove("ChangeLR")
-        if accelerate_possible == False:
-            proposedActions.remove("fast")
-#        print(proposedActions)
-        return proposedActions
