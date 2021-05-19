@@ -19,6 +19,7 @@ class env():
         self.dT = .5 #sec
         self.V_range = list(range(5))
         self.A_range = [-1,0,1]
+        self.List_intersection = []
         # self.agent = vehicleAgent
         # self.ActionsList = ["acc", "dec"]
         # self.ActionsDict = {"acc": 0, "dec": 1}
@@ -28,6 +29,9 @@ class env():
         x,y = x-self.TopLeft[0],y-self.TopLeft[1]
         x_i,y_i = x//(self.cell_len),y//(self.cell_len)
         return x_i,y_i
+
+    def is_intersect(self):
+        pass #TODO:
 
 
     def get_current_cells(self,agent):
