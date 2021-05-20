@@ -33,16 +33,17 @@ def run():
     vehicleList = [car , car2 , car3 , car4]
     my_env = env.env()
     agent = SingleAgent.SingleAgent( my_env , car)
-    agent1 = SingleAgent.SingleAgent( my_env , car2)
+    # agent2 = SingleAgent.SingleAgent( my_env , car2)
 
 
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
         step +=1
         my_env.vehicleList  = []
-        for vechile in vehicleList:
-            if vechile.inIntersection():
-                my_env.vehicleList.append(vechile)
+        id_list = traci.vehicle.getIDList()
+        for vehicle in vehicleList:
+            if (vehicle.ID in id_list) and vehicle.inIntersection():
+                my_env.vehicleList.append(vehicle)
                 print(my_env.vehicleList)
         # if step%7 == 0:
         #     print(step)

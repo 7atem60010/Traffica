@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 19 ماي, 2021 12:48:42 ص by Eclipse SUMO GUI Version v1_8_0+0922-7b2bbb9a60
+<!-- generated on 2021-05-20 11:54:19 by Eclipse SUMO sumo Version 1.9.1
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -23,11 +23,15 @@
     </report>
 
     <traci_server>
-        <remote-port value="41977"/>
+        <remote-port value="32851"/>
     </traci_server>
 
 </configuration>
 -->
 
 <tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+    <tripinfo id="LH" depart="0.00" departLane="53o_0" departPos="4.90" departSpeed="0.00" departDelay="0.00" arrival="273.00" arrivalLane="54i_1" arrivalPos="6.00" arrivalSpeed="3.52" duration="273.00" routeLength="1015.10" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="19.00" rerouteNo="0" devices="tripinfo_LH" vType="typeNS@LH" speedFactor="0.94" vaporized=""/>
+    <tripinfo id="D2" depart="0.00" departLane="54o_0" departPos="4.60" departSpeed="0.00" departDelay="0.00" arrival="273.00" arrivalLane="53i_1" arrivalPos="6.00" arrivalSpeed="3.69" duration="273.00" routeLength="1015.40" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="18.60" rerouteNo="0" devices="tripinfo_D2" vType="typeWE@D2" speedFactor="1.08" vaporized=""/>
+    <tripinfo id="D1" depart="0.00" departLane="52o_0" departPos="4.90" departSpeed="0.00" departDelay="0.00" arrival="277.00" arrivalLane="54i_1" arrivalPos="6.00" arrivalSpeed="3.56" duration="277.00" routeLength="996.93" waitingTime="6.00" waitingCount="1" stopTime="0.00" timeLoss="27.29" rerouteNo="0" devices="tripinfo_D1" vType="typeNS@D1" speedFactor="1.01" vaporized=""/>
+    <tripinfo id="agent" depart="0.00" departLane="51o_0" departPos="4.60" departSpeed="0.00" departDelay="0.00" arrival="282.00" arrivalLane="52i_1" arrivalPos="6.00" arrivalSpeed="3.79" duration="282.00" routeLength="1015.40" waitingTime="5.00" waitingCount="1" stopTime="0.00" timeLoss="27.55" rerouteNo="0" devices="tripinfo_agent" vType="typeWE@agent" speedFactor="1.06" vaporized=""/>
 </tripinfos>

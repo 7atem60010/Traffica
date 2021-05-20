@@ -37,7 +37,7 @@ class AutoVehicle:
     def inIntersection(self):
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
         print(self.pos)
-        if self.pos[0] > self.TopLeft[0] and  self.pos[0] < self.BotRight[0] and self.pos[1] > self.TopLeft[1] and  self.pos[1] < BotRight[1]:
+        if self.pos[0] > self.TopLeft[0] and  self.pos[0] < self.BotRight[0] and self.pos[1] > self.TopLeft[1] and  self.pos[1] < self.BotRight[1]:
             return True
         return False
 
