@@ -73,9 +73,9 @@ class env():
         return True
 
     def get_current_cells(self,agent):
-        angle = math.radians(agent.car.angle)
-        pos = agent.car.position #position at center of front dumper
-        l,w = agent.car.L, self.car.W
+        angle = math.radians(agent.car.angle + 90)
+        pos = agent.car.pos #position at center of front dumper
+        l,w = agent.car.L, agent.car.W
 
         front_left = (pos[0] + w*.5*math.cos(angle+90), pos[1] + w*.5*math.sin(angle+90))
         front_right = (pos[0] + w*.5*math.cos(angle-90), pos[1] + w*.5*math.sin(angle-90))
@@ -94,7 +94,8 @@ class env():
         container_cells = [(xmin,ymin),(xmax,ymax)]
 
         v = agent.car.currentspeed 
-        a = agent.car.accel #TODO:
+        # a = agent.car.accel #TODO:
+        a = 1
         if v == self.V_range[-1] :
             dc = max(math.floor(v**2/2/a),math.floor(v*self.dT))
         elif v < self.V_range[-1]:

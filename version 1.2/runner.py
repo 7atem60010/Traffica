@@ -32,19 +32,43 @@ def run():
 
     vehicleList = [car , car2 , car3 , car4]
     my_env = env.env()
-    agent = SingleAgent.SingleAgent( my_env , car)
+    agent = SingleAgent.SingleAgent(my_env, car)
     # agent2 = SingleAgent.SingleAgent( my_env , car2)
-
+    car_dict = {"agent":car}
 
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
-        step +=1
-        my_env.vehicleList  = []
+        #
+        # id_list = traci.vehicle.getIDList()
+        # vehicleList = [] # in car generation
+        # vechile_dict = {}  # in car generation
+        # print(len(id_list))
         id_list = traci.vehicle.getIDList()
-        for vehicle in vehicleList:
-            if (vehicle.ID in id_list) and vehicle.inIntersection():
-                my_env.vehicleList.append(vehicle)
-                print(my_env.vehicleList)
+        for id in id_list:
+            car = car_dict[id]
+            car.UpdateStatus()
+            # print(car.pos)
+            agent = SingleAgent.SingleAgent(my_env, car)
+            if car.inIntersection():
+                curr_cells, desired_cells = my_env.get_current_cells(agent)
+                print(curr_cells, car.currentspeed, traci.vehicle.getSpeed(car.ID))
+
+            # print(car.inIntersection())
+        #  x .1 x'
+        #  x .5 x'
+        step += 1
+        # my_env.vehicleList = []
+        #id_list = traci.vehicle.getIDList()
+
+        # Intersection Testing (Passed)
+        # for vehicle in vehicleList:
+        #     try:
+        #         if vehicle.inIntersection():
+        #             my_env.vehicleList.append(vehicle)
+        #     except:
+        #         pass
+
+
         # if step%7 == 0:
         #     print(step)
         #     agent.changeLane("left" , step)
@@ -120,8 +144,8 @@ if __name__ == "__main__":
         options.step = .1
     print((options.step))
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
-                             "--tripinfo-output", "tripinfo.xml"],
-                            #  "--step-length", 1,
-                            #  "--begin", int(1),
+                             "--tripinfo-output", "tripinfo.xml",
+                             "--step-length", ".5"]
+                             # "--begin", int(100)]
     )
     run()

@@ -14,10 +14,18 @@ class AutoVehicle:
     def __init__(self, ID):
         ################# Parameters ###################
         self.maxspeed = 4 # We use cell/step convention
-        self.timestep = 0.5 # This is the step value
+        self.dT = 0.5 # This is the step value
         self.accl = 1   # We use cell/step^2 convention
         self.currentspeed = 0  # We use cell/step convention
-
+        self.TopLeft = (499.50,499.50)
+        self.BotRight = (520.50,520.50)
+        self.intersection_Xlen = self.BotRight[0] - self.TopLeft[0]
+        self.intersection_Ylen = self.BotRight[1] - self.TopLeft[1]
+        self.cells_per_side = 24
+        self.cell_len = self.intersection_Ylen/self.cells_per_side
+        self.dT = .5 #sec
+        self.V_range = list(range(5))
+        self.A_range = [-1,0,1]
         ################## Dicts  ######################
         self.speedDict = {0:0, 1: 1.75 , 2: 2.5 , 3: 5.25 , 4: 7} # Mapping from cell/step to m/s
         self.accSumo = 3.5 # m/s^2
@@ -59,7 +67,7 @@ class AutoVehicle:
             print("Warning, over max speed.")
             cell_step = self.V_range[-1]
         else:
-            cell_step = math.round(cell_step)
+            cell_step = round(cell_step)
         return cell_step
 
     def getPose(self):
@@ -92,7 +100,8 @@ class AutoVehicle:
         self.edge = traci.vehicle.getRoadID(self.ID)
         self.angle = traci.vehicle.getAngle(self.ID)
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
-
+        self.currentspeed = self.m_sec_2_cell_step(self.spd)
+        traci.vehicle.setSpeed(self.ID, self.speedDict[self.currentspeed])
 
    ########################################## Actions Functions ##########################################
     def acc(self):
