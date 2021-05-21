@@ -39,9 +39,10 @@ class env():
     def updateStates(self):
         for v in self.vehicleList:
             cont_cells, desired_cells = self.get_current_cells(v)
-            velocity = v.currentSpeed
+            velocity = v.car.currentSpeed
             queue = v.queue
-            self.states[v.carID] = (cont_cells,desired_cells,velocity,queue)
+            self.states[v.carID] = (cont_cells,velocity,desired_cells,queue)
+            print((cont_cells,velocity,desired_cells,queue))
 
     def get_overlapping_cars(self):
         for i,car1 in enumerate(self.vehicleList):
@@ -73,7 +74,9 @@ class env():
         return True
 
     def get_current_cells(self,agent):
-        angle = math.radians(agent.car.angle + 90)
+        angle_d = (-agent.car.angle + 90)% 360
+        angle = math.radians(angle_d)
+        print(angle_d)
         pos = agent.car.pos #position at center of front dumper
         l,w = agent.car.L, agent.car.W
 
@@ -88,26 +91,34 @@ class env():
         cell_BL = self.point_to_cell(back_left)
         cell_BR = self.point_to_cell(back_right)
         cells = [cell_BL,cell_BR,cell_FR,cell_FL]
-
-        xmin,xmax = min([cell[0] for cell in cells]),max([cell[0] for cell in cells])
-        ymin,ymax = min([cell[1] for cell in cells]),max([cell[1] for cell in cells]) 
+        _24 = self.cells_per_side
+        xmin,xmax=min([cell[0] for cell in cells]), max([cell[0] for cell in cells])
+        ymin,ymax = min([cell[1] for cell in cells]), max([cell[1] for cell in cells])
         container_cells = [(xmin,ymin),(xmax,ymax)]
+        # xmin_,xmax_ =max(0, min([cell[0] for cell in cells])), min(_24, max([cell[0] for cell in cells]))
+        # ymin_,ymax_ = max(0, min([cell[1] for cell in cells])), min(_24 ,max([cell[1] for cell in cells]) )
+        # container_cells = [(xmin_,ymin_),(xmax_,ymax_)]
 
         v = agent.car.currentspeed 
         # a = agent.car.accel #TODO:
         a = 1
         if v == self.V_range[-1] :
-            dc = max(math.floor(v**2/2/a),math.floor(v*self.dT))
+            dc = max(math.ceil(v**2/2/a),math.ceil(v*self.dT))
         elif v < self.V_range[-1]:
-            dc = max(math.floor(v**2/2/a),math.floor(v*self.dT+.5*a*self.dT))
+            dc = max(math.ceil(v**2/2/a),math.ceil(v*self.dT+.5*a*self.dT))
         else:
             raise("Wrong value of V detected at cat",agent.car.ID)
-        dc_x = math.ceil(dc * math.cos(angle))
-        dc_y = math.ceil(dc * math.sin(angle))
+        # dc_x = math.ceil(dc * math.cos(angle))  if dc * math.cos(angle) >0  else math.floor(dc * math.cos(angle))
+        # dc_y = math.ceil(dc * math.sin(angle))  if dc * math.sin(angle) >0  else math.floor(dc * math.sin(angle))
+        dc_x = round(dc * math.cos(angle))
+        dc_y = round(dc * math.sin(angle))
+        print(dc,dc_x,dc_y)
         xmin += dc_x
         xmax += dc_x
         ymin += dc_y
         ymax += dc_y
+        # xmin_,xmax_ =max(0, min([cell[0] for cell in cells])), min(_24, max([cell[0] for cell in cells]))
+        # ymin_,ymax_ = max(0, min([cell[1] for cell in cells])), min(_24 ,max([cell[1] for cell in cells]))
         desired_cells = [(xmin,ymin),(xmax,ymax)]
         return container_cells,desired_cells
 

@@ -26,7 +26,6 @@ class SingleAgent():
             """
             self.exp_exp_tradeoff = random.uniform(0, 1)
             self.epsilon = 1.0
-
             self.gamma = 0.618
             self.learning_rate = 0.7
             self.max_epsilon = 1.0
@@ -37,15 +36,16 @@ class SingleAgent():
     # Random policy to take an action
     #self.Action = self.ActionsList[randrange(len(self.ActionsList))]
 
-    def PickAction(self ,possible_actions, current_state):
+    def PickAction(self ): # ,possible_actions, current_state
         self.Action = self.ActionsList[randrange(len(self.ActionsList))]
+        print(" My action", self.Action)
         #print(current_state)
         #print(possible_actions)
 
 
 
 
-    def TakeAction(self , step):
+    def TakeAction(self):
 
         if self.Action=="acc":
             self.car.acc()
@@ -54,5 +54,5 @@ class SingleAgent():
             self.car.dec()
 
         elif self.Action=="keep_going":
-            self.keepgoing()
+            self.car.keepgoing()
 

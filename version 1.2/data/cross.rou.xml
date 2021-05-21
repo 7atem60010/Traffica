@@ -9,11 +9,11 @@
 
         <route id="up" edges="53o 3i 4o 54i" />
         <route id="up_right" edges="53o 3i 2o 52i" />
-        <route id="down_left" edges="54o 4i 1o 51i" />
+        <route id="up_left" edges="53o 3i 1o 51i" />
         <route id="down" edges="54o 4i 3o 53i" />
 
-        <vehicle depart="0" id="agent" route="up" type="typeWE" color="1,0,0"/>
-<!--        <vehicle depart="0" id="LH" route="up" type="typeNS" />-->
-<!--        <vehicle depart="0" id="D1" route="left_up" type="typeNS" color="1,0,0"/>-->
-<!--        <vehicle depart="0" id="D2" route="down" type="typeWE" />-->
+        <vehicle depart="10" id="agent" route="up_left" type="typeWE" color="1,0,0"/>
+        <vehicle depart="0" id="LH" route="up" type="typeNS" />
+        <vehicle depart="0" id="D1" route="left_up" type="typeNS" color="1,0,0"/>
+        <vehicle depart="0" id="D2" route="down" type="typeWE" />
 </routes>

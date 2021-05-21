@@ -13,7 +13,6 @@ class AutoVehicle:
 
     def __init__(self, ID):
         ################# Parameters ###################
-        self.maxspeed = 4 # We use cell/step convention
         self.dT = 0.5 # This is the step value
         self.accl = 1   # We use cell/step^2 convention
         self.currentspeed = 0  # We use cell/step convention
@@ -27,9 +26,10 @@ class AutoVehicle:
         self.V_range = list(range(5))
         self.A_range = [-1,0,1]
         ################## Dicts  ######################
-        self.speedDict = {0:0, 1: 1.75 , 2: 2.5 , 3: 5.25 , 4: 7} # Mapping from cell/step to m/s
+        self.speedDict = {0:0, 1: 1.75 , 2: 3.5 , 3: 5.25 , 4: 7} # Mapping from cell/step to m/s
+        self.maxspeed = 7 # We use m/s convention
         self.accSumo = 3.5 # m/s^2
-
+        # self.set
         ################# Intersection dimensions ################
         self.TopLeft = (499.50, 499.50)
         self.BotRight = (520.50, 520.50)
@@ -44,10 +44,13 @@ class AutoVehicle:
     ###################################################################
     def inIntersection(self):
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
-        print(self.pos)
+        inter = False
         if self.pos[0] > self.TopLeft[0] and  self.pos[0] < self.BotRight[0] and self.pos[1] > self.TopLeft[1] and  self.pos[1] < self.BotRight[1]:
-            return True
-        return False
+            inter = True
+        if not inter:
+            self.lane = traci.vehicle.getLaneID(self.ID)
+            self.queue = traci.lane.getLastStepVehicleNumber(self.lane)
+        return inter
 
     ############################# Getter ###############################
 
@@ -101,23 +104,31 @@ class AutoVehicle:
         self.angle = traci.vehicle.getAngle(self.ID)
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
         self.currentspeed = self.m_sec_2_cell_step(self.spd)
-        traci.vehicle.setSpeed(self.ID, self.speedDict[self.currentspeed])
+
+        # traci.vehicle.setSpeed(self.ID, self.speedDict[self.currentspeed])
 
    ########################################## Actions Functions ##########################################
     def acc(self):
-        if self.currentspeed < self.maxspeed:
-            traci.vehicle.slowdown(self.ID,self.speedDict[self.currentspeed+1] , self.timestep )
+        if self.currentspeed < 4:
+            traci.vehicle.slowDown(self.ID,self.speedDict[self.currentspeed+1] , self.dT/10 )
             self.currentspeed += 1
+            # traci.vehicle.setSpeed(self.ID,self.speedDict[self.currentspeed])
             self.accl = 1
+        print("Done")
 
     def dec(self):
         if self.currentspeed > 0 :
-            traci.vehicle.slowdown(self.ID,self.speedDict[self.currentspeed-1] , self.timestep )
+            traci.vehicle.slowDown(self.ID,self.speedDict[self.currentspeed-1] , self.dT/10 )
             self.currentspeed -= 1
+            # traci.vehicle.setSpeed(self.ID,self.speedDict[self.currentspeed])
             self.accl = -1
+        print("Done")
+
 
     def keepgoing(self):
         self.accl = 0
+        print("Done")
+
 
 
 

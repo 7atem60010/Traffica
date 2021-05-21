@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2021-05-20 16:56:40 by Eclipse SUMO sumo Version 1.9.1
+<!-- generated on 2021-05-20 19:35:27 by Eclipse SUMO sumo Version 1.9.1
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -24,7 +24,7 @@
     </report>
 
     <traci_server>
-        <remote-port value="57229"/>
+        <remote-port value="52493"/>
     </traci_server>
 
     <gui_only>
@@ -35,5 +35,5 @@
 -->
 
 <tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
-    <tripinfo id="agent" depart="0.00" departLane="53o_0" departPos="4.60" departSpeed="0.00" departDelay="0.00" arrival="873.00" arrivalLane="54i_1" arrivalPos="6.00" arrivalSpeed="1.75" duration="873.00" routeLength="1007.40" waitingTime="300.50" waitingCount="1" stopTime="0.00" timeLoss="622.44" rerouteNo="0" devices="tripinfo_agent" vType="typeWE@agent" speedFactor="1.06" vaporized=""/>
+    <tripinfo id="agent" depart="10.00" departLane="53o_0" departPos="4.60" departSpeed="0.00" departDelay="0.00" arrival="168.50" arrivalLane="51i_1" arrivalPos="6.00" arrivalSpeed="6.86" duration="158.50" routeLength="1012.71" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="13.65" rerouteNo="0" devices="tripinfo_agent" vType="typeWE@agent" speedFactor="1.06" vaporized=""/>
 </tripinfos>

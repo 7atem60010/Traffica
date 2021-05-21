@@ -25,33 +25,53 @@ import traci  # noqa
 def run():
     """execute the TraCI control loop"""
     step = 0
-    car = AutoVehicle.AutoVehicle("agent")
-    car2 = AutoVehicle.AutoVehicle("D1")
-    car3 = AutoVehicle.AutoVehicle("D2")
-    car4 = AutoVehicle.AutoVehicle("LH")
 
-    vehicleList = [car , car2 , car3 , car4]
+    # # car generation
+    # id_list = traci.vehicle.getIDList()
+    # vehicleList =[]
+    # vechile_dict ={}
+    # print(len(id_list))
+    # for id in id_list:
+    #     print(id)
+    #     car = AutoVehicle.AutoVehicle(id)
+    #     vehicleList.append(car)
+    #     vechile_dict[id] = car
+    # car2 = AutoVehicle.AutoVehicle("LH")
+    # car3 = AutoVehicle.AutoVehicle("D2")
+    # car4 = AutoVehicle.AutoVehicle("LH")
+    car = AutoVehicle.AutoVehicle("agent")
+    #vehicleList = [car , car2 , car3 , car4]
+
     my_env = env.env()
     agent = SingleAgent.SingleAgent(my_env, car)
     # agent2 = SingleAgent.SingleAgent( my_env , car2)
-    car_dict = {"agent":car}
+    car_dict = {"agent":car }
+    my_env.vehicleList = [SingleAgent.SingleAgent(my_env, car) for car in list(car_dict.values())]
 
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
+        print(traci.simulation.getTime())
         #
         # id_list = traci.vehicle.getIDList()
         # vehicleList = [] # in car generation
         # vechile_dict = {}  # in car generation
         # print(len(id_list))
         id_list = traci.vehicle.getIDList()
+        car.UpdateStatus()
         for id in id_list:
             car = car_dict[id]
+            print(traci.vehicle.getLaneID(car.ID))
             car.UpdateStatus()
             # print(car.pos)
             agent = SingleAgent.SingleAgent(my_env, car)
             if car.inIntersection():
                 curr_cells, desired_cells = my_env.get_current_cells(agent)
-                print(curr_cells, car.currentspeed, traci.vehicle.getSpeed(car.ID))
+                agent.PickAction()
+                agent.TakeAction()
+                print(car.queue)
+
+                # print(curr_cells, desired_cells, car.currentspeed, traci.vehicle.getSpeed(car.ID))
+                # print(car.currentspeed, car)
 
             # print(car.inIntersection())
         #  x .1 x'
@@ -83,7 +103,7 @@ def run():
         # myenv.TakeAction( step )
         # myenv.Current_state()
         #try:
-        current_state =  my_env.Car_current_state(agent)
+        #current_state =  my_env.Car_current_state(agent)
         #possible_actions = my_env.getFeasibleActions(agent)
         #agent.PickAction(current_state , possible_actions)
         #agent.TakeAction(step)
@@ -146,6 +166,6 @@ if __name__ == "__main__":
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "--tripinfo-output", "tripinfo.xml",
                              "--step-length", ".5"]
-                             # "--begin", int(100)]
+                             # "--begin", "400"]
     )
     run()
