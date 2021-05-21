@@ -56,3 +56,7 @@ class SingleAgent():
         elif self.Action=="keep_going":
             self.car.keepgoing()
 
+    def qlearing(self):
+        for vehicleAgent in self.env.intersectionAgentList:
+            vechilestate = self.env.states[vehicleAgent.car.ID]
+            joint_agents =  self.env.is_overlap(vehicleAgent)

@@ -25,6 +25,7 @@ class AutoVehicle:
         self.dT = .5 #sec
         self.V_range = list(range(5))
         self.A_range = [-1,0,1]
+        self.queuelen = 0
         ################## Dicts  ######################
         self.speedDict = {0:0, 1: 1.75 , 2: 3.5 , 3: 5.25 , 4: 7} # Mapping from cell/step to m/s
         self.maxspeed = 7 # We use m/s convention
@@ -44,13 +45,13 @@ class AutoVehicle:
     ###################################################################
     def inIntersection(self):
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
-        inter = False
+        self.inter = False
         if self.pos[0] > self.TopLeft[0] and  self.pos[0] < self.BotRight[0] and self.pos[1] > self.TopLeft[1] and  self.pos[1] < self.BotRight[1]:
-            inter = True
-        if not inter:
+            self.inter = True
+        if not self.inter:
             self.lane = traci.vehicle.getLaneID(self.ID)
-            self.queue = traci.lane.getLastStepVehicleNumber(self.lane)
-        return inter
+            self.queuelen = traci.lane.getLastStepVehicleNumber(self.lane)
+        return self.inter
 
     ############################# Getter ###############################
 
@@ -104,8 +105,68 @@ class AutoVehicle:
         self.angle = traci.vehicle.getAngle(self.ID)
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
         self.currentspeed = self.m_sec_2_cell_step(self.spd)
-
+        self.get_current_cells()
         # traci.vehicle.setSpeed(self.ID, self.speedDict[self.currentspeed])
+
+    def point_to_cell(self,point):
+        x,y = point[0],point[1]
+        x,y = x-self.TopLeft[0],y-self.TopLeft[1]
+        x_i,y_i = x//(self.cell_len),y//(self.cell_len)
+        return x_i,y_i
+
+    def get_current_cells(self):
+        angle_d = (-self.angle + 90)% 360
+        angle = math.radians(angle_d)
+        #print(angle_d)
+        pos = self.pos #position at center of front dumper
+        l, w = self.L, self.W
+
+        front_left = (pos[0] + w*.5*math.cos(angle+90), pos[1] + w*.5*math.sin(angle+90))
+        front_right = (pos[0] + w*.5*math.cos(angle-90), pos[1] + w*.5*math.sin(angle-90))
+        pos_back = (pos[0] - l*math.cos(angle), pos[1] - l*math.sin(angle))
+        back_left = (pos_back[0] + w*.5*math.cos(angle+90), pos_back[1] + w*.5*math.sin(angle+90))
+        back_right = (pos_back[0] + w*.5*math.cos(angle-90), pos_back[1] + w*.5*math.sin(angle-90))
+
+        cell_FL = self.point_to_cell(front_left)
+        cell_FR = self.point_to_cell(front_right)
+        cell_BL = self.point_to_cell(back_left)
+        cell_BR = self.point_to_cell(back_right)
+        cells = [cell_BL,cell_BR,cell_FR,cell_FL]
+        _24 = self.cells_per_side
+        xmin,xmax=min([cell[0] for cell in cells]), max([cell[0] for cell in cells])
+        ymin,ymax = min([cell[1] for cell in cells]), max([cell[1] for cell in cells])
+        # container_cells = [(xmin,ymin),(xmax,ymax)]
+        container_cells = [(xmin,xmax),(ymin,ymax)]
+
+        # xmin_,xmax_ = max(0, min([cell[0] for cell in cells])), min(_24, max([cell[0] for cell in cells]))
+        # ymin_,ymax_ = max(0, min([cell[1] for cell in cells])), min(_24 ,max([cell[1] for cell in cells]) )
+        # container_cells = [(xmin_,ymin_),(xmax_,ymax_)]
+
+        v = self.currentspeed
+        # a = agent.car.accel #TODO:
+        a = 1
+        if v == self.V_range[-1] :
+            dc = max(math.ceil(v**2/2/a),math.ceil(v*self.dT))
+        elif v < self.V_range[-1]:
+            dc = max(math.ceil(v**2/2/a),math.ceil(v*self.dT+.5*a*self.dT))
+        else:
+            raise("Wrong value of V detected at cat",self.ID)
+        # dc_x = math.ceil(dc * math.cos(angle))  if dc * math.cos(angle) >0  else math.floor(dc * math.cos(angle))
+        # dc_y = math.ceil(dc * math.sin(angle))  if dc * math.sin(angle) >0  else math.floor(dc * math.sin(angle))
+        dc_x = round(dc * math.cos(angle))
+        dc_y = round(dc * math.sin(angle))
+        #print(dc,dc_x,dc_y)
+        xmin += dc_x
+        xmax += dc_x
+        ymin += dc_y
+        ymax += dc_y
+        # xmin_,xmax_ =max(0, min([cell[0] for cell in cells])), min(_24, max([cell[0] for cell in cells]))
+        # ymin_,ymax_ = max(0, min([cell[1] for cell in cells])), min(_24 ,max([cell[1] for cell in cells]))
+        #desired_cells = [(xmin,ymin),(xmax,ymax)]
+        desired_cells = [(xmin, xmax), (ymin, ymax)]
+        self.cont_cells = container_cells
+        self.desired_cells = desired_cells
+
 
    ########################################## Actions Functions ##########################################
     def acc(self):
