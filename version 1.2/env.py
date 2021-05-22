@@ -88,7 +88,7 @@ class env():
         print("Global Reward")
 
     def get_agent_individual_reward(self, vehicle):
-        return -1 * (0.5 - vehicle.get_time_step_distance() / vehicle.maxspeed)
+        return -1 * (self.dT - vehicle.get_time_step_distance() / vehicle.maxspeed)
 
     def get_agent_coordinated_reward(self, cardIds):
         print("Coordinated agents reward")

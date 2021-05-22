@@ -16,6 +16,8 @@ class AutoVehicle:
         self.dT = 0.5 # This is the step value
         self.accl = 1   # We use cell/step^2 convention
         self.currentspeed = 0  # We use cell/step convention
+        self._pos = (0, 0)
+        self._step = -1
         self.TopLeft = (499.50,499.50)
         self.BotRight = (520.50,520.50)
         self.intersection_Xlen = self.BotRight[0] - self.TopLeft[0]
@@ -37,7 +39,7 @@ class AutoVehicle:
         ################################################
 
         self.isPrevIndividual = True
-
+        self._hot_time = -1
         self.ID = ID
         traci.vehicle.setMaxSpeed(self.ID ,self.maxspeed )
         traci.vehicle.setAccel(self.ID , self.accl)
@@ -108,16 +110,24 @@ class AutoVehicle:
         self.lane = traci.vehicle.getLaneID(self.ID)
         self.edge = traci.vehicle.getRoadID(self.ID)
         self.angle = traci.vehicle.getAngle(self.ID)
-        self.old_pos = (0,0)
+        # self.old_pos = self.pos
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
         self.currentspeed = self.m_sec_2_cell_step(self.spd)
         self.get_current_cells()
+        #bad hot fix, separate pos variable
         # traci.vehicle.setSpeed(self.ID, self.speedDict[self.currentspeed])
 
+    def hot_update_pos(self):
+        if self._hot_time == traci.simulation.getTime():
+            return
+        self._step = traci.simulation.getTime()
+        self._pos_old = self._pos
+        self._pos = traci.vehicle.getPosition(self.ID)
+
     def get_time_step_distance(self):
-        self.pos = traci.vehicle.getPosition(self.ID)
-        print(f"old position: {self.old_pos}, current position: {self.pos}")
-        distance = np.sqrt((self.pos[0] - self.old_pos[0])**2+(self.pos[1] - self.old_pos[1])**2)
+
+        self.hot_update_pos()
+        distance = np.sqrt((self._pos[0] - self._pos_old[0])**2+(self._pos[1] - self._pos_old[1])**2)
         return distance
 
     def point_to_cell(self,point):
@@ -148,11 +158,10 @@ class AutoVehicle:
         xmin,xmax=min([cell[0] for cell in cells]), max([cell[0] for cell in cells])
         ymin,ymax = min([cell[1] for cell in cells]), max([cell[1] for cell in cells])
         # container_cells = [(xmin,ymin),(xmax,ymax)]
-        container_cells = [(xmin,xmax),(ymin,ymax)]
 
-        # xmin_,xmax_ = max(0, min([cell[0] for cell in cells])), min(_24, max([cell[0] for cell in cells]))
-        # ymin_,ymax_ = max(0, min([cell[1] for cell in cells])), min(_24 ,max([cell[1] for cell in cells]) )
-        # container_cells = [(xmin_,ymin_),(xmax_,ymax_)]
+        xmin_,xmax_ = max(0, min([cell[0] for cell in cells])), min(_24, max([cell[0] for cell in cells]))
+        ymin_,ymax_ = max(0, min([cell[1] for cell in cells])), min(_24 ,max([cell[1] for cell in cells]) )
+        container_cells = [(xmin_,xmax_),(ymin_,ymax_)]
 
         v = self.currentspeed
         # a = agent.car.accel #TODO:
@@ -172,10 +181,10 @@ class AutoVehicle:
         xmax += dc_x
         ymin += dc_y
         ymax += dc_y
-        # xmin_,xmax_ =max(0, min([cell[0] for cell in cells])), min(_24, max([cell[0] for cell in cells]))
-        # ymin_,ymax_ = max(0, min([cell[1] for cell in cells])), min(_24 ,max([cell[1] for cell in cells]))
-        #desired_cells = [(xmin,ymin),(xmax,ymax)]
-        desired_cells = [(xmin, xmax), (ymin, ymax)]
+        xmin_,xmax_ =max(0, min([cell[0] for cell in cells])), min(_24, max([cell[0] for cell in cells]))
+        ymin_,ymax_ = max(0, min([cell[1] for cell in cells])), min(_24 ,max([cell[1] for cell in cells]))
+        # desired_cells = [(xmin,ymin),(xmax,ymax)]
+        desired_cells = [(xmin_, xmax_), (ymin_, ymax_)]
         self.cont_cells = container_cells
         self.desired_cells = desired_cells
 
@@ -187,7 +196,6 @@ class AutoVehicle:
             self.currentspeed += 1
             # traci.vehicle.setSpeed(self.ID,self.speedDict[self.currentspeed])
             self.accl = 1
-        print("Done")
 
     def dec(self):
         if self.currentspeed > 0 :
@@ -195,12 +203,11 @@ class AutoVehicle:
             self.currentspeed -= 1
             # traci.vehicle.setSpeed(self.ID,self.speedDict[self.currentspeed])
             self.accl = -1
-        print("Done")
 
 
     def keepgoing(self):
+        traci.vehicle.slowDown(self.ID, self.speedDict[self.currentspeed], self.dT / 10)
         self.accl = 0
-        print("Done")
 
 
 
