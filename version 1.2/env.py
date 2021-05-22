@@ -29,58 +29,35 @@ class env():
 
     def updateIntersectionAgents(self, existing_agents):
         self.intersectionAgentList = []
-        for agent in existing_agents:
+        for car in existing_agents:
             try:
-                if agent.car.inIntersection():
-                    self.intersectionAgentList.append(agent)
-                    agent.car.UpdateStatus()
+                if car.inIntersection():
+                    self.intersectionAgentList.append(car)
+                    car.UpdateStatus()
             except:
                 pass
 
 
-
-
-    # def is_overlap(self, agent):
-    #     agent => 5
-    #     if self.overLap[agent.id] :
-    #         return false
-    #     else:
-    #         1,2
-    #         return []
-
-    # def is_intersect(self):
-    #     pass #TODO:
-
     def updateStates(self):
         self.states = {}
-        for agent in self.intersectionAgentList:
-            cont_cells, desired_cells = agent.car.cont_cells, agent.car.desired_cells
-            velocity = agent.car.currentspeed
-            queue = agent.car.queuelen
-            self.states[agent.car.ID] = (cont_cells, velocity, desired_cells, queue)
-            #print((cont_cells,velocity,desired_cells,queue))
-        #if len(self.states): print(self.states)
+        for car in self.intersectionAgentList:
+            cont_cells, desired_cells = car.cont_cells, car.desired_cells
+            velocity = car.currentspeed
+            queue = car.queuelen
+            self.states[car.ID] = (cont_cells, velocity, desired_cells, queue)
 
-    def get_overlapping_cars(self):
-        for i,car1 in enumerate(self.intersectionAgentList):
-            for j in range(i+1,len(self.intersectionAgentList)):
-                car2 = self.intersectionAgentList[j]
-                dc1 = self.states[car1][1]
-                dc2 = self.states[car2][1]
-                if self.doOverlap(dc1[0],dc1[1],dc2[0],dc2[1]):
-                    self.append(car1,car2)
 
-    def is_overlap(self, agent_asking):
-        car_id = agent_asking.car.ID
+    def is_overlap(self, car):
+        car_id = car.ID
         joint_agents = []
-        l1 = (agent_asking.car.desired_cells[0][0], agent_asking.car.desired_cells[1][0])
-        r1 = (agent_asking.car.desired_cells[0][1], agent_asking.car.desired_cells[1][1])
+        l1 = (car.desired_cells[0][0], car.desired_cells[1][0])
+        r1 = (car.desired_cells[0][1], car.desired_cells[1][1])
         for agent in self.intersectionAgentList:
-            if agent.car.ID != car_id:
-                l2 = (agent.car.desired_cells[0][0], agent.car.desired_cells[1][0])
-                r2 = (agent.car.desired_cells[0][1], agent.car.desired_cells[1][1])
+            if agent.ID != car_id:
+                l2 = (agent.desired_cells[0][0], agent.desired_cells[1][0])
+                r2 = (agent.desired_cells[0][1], agent.desired_cells[1][1])
                 if self.doOverlap(l1, r1, l2, r2):
-                    joint_agents.append(agent.car.ID)
+                    joint_agents.append(agent.ID)
         return joint_agents
 
     def doOverlap(self,l1, r1, l2, r2): #geeks 4 geeks
@@ -107,27 +84,15 @@ class env():
     def get_desired_cells(self):
         pass
 
-    def Reward(self, agent):
-        try:
-            agent.car.UpdateStatus()
-            agent.car.reward = 0
-            if agent.car.isStop() == False:
-                agent.car.reward += 1
+    def get_global_reward(self):
+        print("Global Reward")
 
-            agent.car.reward -= agent.car.wait_time()
+    def get_agent_individual_reward(self, vehicle):
+        return -1 * (0.5 - vehicle.get_time_step_distance() / vehicle.maxspeed)
 
-            agent.car.reward += (agent.car.spd / agent.car.maxspeed) * 10
+    def get_agent_coordinated_reward(self, cardIds):
+        print("Coordinated agents reward")
 
-            nonlane_vehicle_num = traci.edge.getLastStepVehicleNumber(
-                agent.car.edge) - traci.lane.getLastStepVehicleNumber(agent.car.lane)
-            if traci.lane.getLastStepVehicleNumber(agent.car.lane) == max(
-                    traci.lane.getLastStepVehicleNumber(agent.car.lane), nonlane_vehicle_num):
-                agent.car.reward += traci.lane.getLastStepVehicleNumber(agent.car.lane) - nonlane_vehicle_num
-            else:
-                agent.car.reward += traci.lane.getLastStepVehicleNumber(agent.car.lane) - nonlane_vehicle_num
-        except:
-            pass
-        # print("Reward :", self.agent.reward)
 
 
 

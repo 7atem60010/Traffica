@@ -87,6 +87,9 @@ def run():
     # car_dict = {"agent":car }
     # my_env.vehicleList = [SingleAgent.SingleAgent(my_env, car) for car in list(car_dict.values())]
     #
+
+    trainer = SingleAgent.SingleAgent(my_env)
+
     while traci.simulation.getMinExpectedNumber() > 0:
         step += 1
         time = traci.simulation.getTime()
@@ -96,11 +99,11 @@ def run():
 
         # ADD newly added cars as an agents
         for car_id in dep:
-            existing_agents.append(SingleAgent.SingleAgent(my_env, AutoVehicle.AutoVehicle(car_id)))
+            existing_agents.append(AutoVehicle.AutoVehicle(car_id))
 
         # Remove the arrived-to-destination cars
         for agent in existing_agents:
-            if agent.car.ID in arv:
+            if agent.ID in arv:
                 existing_agents.remove(agent)
 
         # Cars in
@@ -112,6 +115,9 @@ def run():
             if len(joint) > 0:
                 print(time, joint)
 
+        Q_i, Q_I = trainer.train()
+        print("Train Done")
+        print(Q_i)
         # for x in my_env.intersectionAgentList:
         #     print(x.car.ID)
         #Creating a list of cars in the intersection:

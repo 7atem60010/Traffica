@@ -1,6 +1,6 @@
 import sys , os
 sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), 'tools'))
-
+import numpy as np
 import traci
 import math
 from random import randrange
@@ -36,11 +36,16 @@ class AutoVehicle:
         self.BotRight = (520.50, 520.50)
         ################################################
 
+        self.isPrevIndividual = True
+
         self.ID = ID
         traci.vehicle.setMaxSpeed(self.ID ,self.maxspeed )
         traci.vehicle.setAccel(self.ID , self.accl)
         self.L, self.W = traci.vehicle.getLength(self.ID), traci.vehicle.getWidth(self.ID)
         self.DoI = 0
+
+
+
 
     ###################################################################
     def inIntersection(self):
@@ -103,10 +108,17 @@ class AutoVehicle:
         self.lane = traci.vehicle.getLaneID(self.ID)
         self.edge = traci.vehicle.getRoadID(self.ID)
         self.angle = traci.vehicle.getAngle(self.ID)
+        self.old_pos = (0,0)
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
         self.currentspeed = self.m_sec_2_cell_step(self.spd)
         self.get_current_cells()
         # traci.vehicle.setSpeed(self.ID, self.speedDict[self.currentspeed])
+
+    def get_time_step_distance(self):
+        self.pos = traci.vehicle.getPosition(self.ID)
+        print(f"old position: {self.old_pos}, current position: {self.pos}")
+        distance = np.sqrt((self.pos[0] - self.old_pos[0])**2+(self.pos[1] - self.old_pos[1])**2)
+        return distance
 
     def point_to_cell(self,point):
         x,y = point[0],point[1]
