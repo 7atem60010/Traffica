@@ -47,7 +47,7 @@ def generate_routefile():
         """, file=routes)
         vehNr = 0
         # demand per second from different directions
-        p = 1/1000
+        p = 1/100
         #TODO: difference between time step and simulation step
         myroutes = ['right','right_up','right_down','left','left_up','left_down',"up", "up_right" , "up_left" , "down_right" , "down_left" , "down"]
         for i in range(N):
@@ -58,7 +58,7 @@ def generate_routefile():
                     vehNr += 1
         print("</routes>", file=routes)
 
-def run():
+def run(episode):
     """execute the TraCI control loop"""
     step = 0
     generate_routefile()
@@ -91,7 +91,7 @@ def run():
             if len(joint) > 0:
                 print(time, joint)
 
-        Q_i, Q_I = trainer.train()
+        Q_i, Q_I = trainer.train(episode)
         # print("Train Done")
         # print(Q_i)
         # print(f"In Episode {i}: Q table is ")
@@ -154,4 +154,4 @@ if __name__ == "__main__":
         )
         # save the csv
         print("Simulation Step: ", i)
-        run()
+        run(i+1)

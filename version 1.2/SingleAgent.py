@@ -37,7 +37,7 @@ class SingleAgent():
                 with open("./output/Q_I.pickle", "rb") as f:
                     self.Q_I = pickle.load(f)
             except:
-                self.Q_I = defaultdict(self.joint_action)
+                self.Q_I = defaultdict(self.indvidual_action)
 
 
     def indvidual_action(self):
@@ -46,11 +46,11 @@ class SingleAgent():
     def joint_action(self):
         return np.zeros(self.nA_joint)
 
-    def train(self):
+    def train(self, episode):
         if self.algorithm == 'qlearning':
-            return self.q_learning()
+            return self.q_learning(episode)
 
-    def q_learning(self):
+    def q_learning(self, episode):
         # initialize empty dictionary of arrays
 
         def update_individual(state, reward, chosen_action, next_state):
@@ -78,7 +78,9 @@ class SingleAgent():
             self.Q_i[f"{state}"][chosen_action] = (1 - self.alpha) * self.Q_i[f"{state}"][chosen_action] + self.alpha *\
                                                   (reward + self.gamma * 0.5 * (self.Q_I[f"{next_state}"][best_action]))
 
-        self.epsilon = self.min_epsilon
+        self.epsilon = self.epsilon / episode
+        if self.epsilon < self.min_epsilon:
+            self.epsilon = self.min_epsilon
 
         car_state_action_reward_nextState =[]
 
@@ -96,11 +98,12 @@ class SingleAgent():
                 current_state = (current_state, other_car_state)
                 prob[np.argmax(self.Q_I[f"{current_state}"])] += 1 - self.epsilon
                 action = np.random.choice(np.arange(self.nA), p=prob)
-
+                car.isPrevIndividual = False
             else:
 
                 prob[np.argmax(self.Q_i[f"{current_state}"])] += 1 - self.epsilon
                 action = np.random.choice(np.arange(self.nA), p=prob)
+                car.isPrevIndividual = True
 
 
             if action == 0:
@@ -122,7 +125,9 @@ class SingleAgent():
             if(len(self.env.is_overlap(car)) == 0 and car.isPrevIndividual):
                 update_individual(current_state, reward, action, next_state)
 
+
             elif(len(self.env.is_overlap(car)) > 0 and car.isPrevIndividual):
+                print("In coordinated and switched to individual")
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
@@ -134,6 +139,7 @@ class SingleAgent():
                 update_from_coordinated_to_individual(current_state, reward, action, next_state_1, next_state_2)
 
             elif(len(self.env.is_overlap(car)) > 0 and not car.isPrevIndividual):
+                print("In coordinated and still in coordinated")
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
