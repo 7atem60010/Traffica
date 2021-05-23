@@ -46,19 +46,22 @@ class env():
             queue = car.queuelen
             self.states[car.ID] = (cont_cells, velocity, desired_cells, queue)
 
+    def is_overlap(self, agent_asking):
+            car_id = agent_asking.ID
+            joint_agents = []
+            R1 = [agent_asking.desired_cells[0][0], agent_asking.desired_cells[1][0] ,agent_asking.desired_cells[0][1], agent_asking.desired_cells[1][1]]
+            for agent in self.intersectionAgentList:
+                if agent.ID != car_id:
+                    R2 = [agent.desired_cells[0][0], agent.desired_cells[1][0] , agent.desired_cells[0][1], agent.desired_cells[1][1] ]
+                    if self.isRectangleOverlap(R1 , R2):
+                        joint_agents.append(agent)
+            return joint_agents
 
-    def is_overlap(self, car):
-        car_id = car.ID
-        joint_agents = []
-        l1 = (car.desired_cells[0][0], car.desired_cells[1][0])
-        r1 = (car.desired_cells[0][1], car.desired_cells[1][1])
-        for agent in self.intersectionAgentList:
-            if agent.ID != car_id:
-                l2 = (agent.desired_cells[0][0], agent.desired_cells[1][0])
-                r2 = (agent.desired_cells[0][1], agent.desired_cells[1][1])
-                if self.doOverlap(l1, r1, l2, r2):
-                    joint_agents.append(agent.ID)
-        return joint_agents
+    def isRectangleOverlap(self, R1, R2):
+        if (R1[0] >= R2[2]) or (R1[2] <= R2[0]) or (R1[3] <= R2[1]) or (R1[1] >= R2[3]):
+            return False
+        else:
+            return True
 
     def doOverlap(self,l1, r1, l2, r2): #geeks 4 geeks
         
