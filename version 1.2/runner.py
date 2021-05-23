@@ -47,7 +47,7 @@ def generate_routefile():
         """, file=routes)
         vehNr = 0
         # demand per second from different directions
-        p = 1/10
+        p = 1/1000
         #TODO: difference between time step and simulation step
         myroutes = ['right','right_up','right_down','left','left_up','left_down',"up", "up_right" , "up_left" , "down_right" , "down_left" , "down"]
         for i in range(N):
@@ -145,7 +145,7 @@ if __name__ == "__main__":
         options.step = .1
     print((options.step))
     # for-loop
-    for i in range(10):
+    for i in range(1):
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--collision.action","none",
