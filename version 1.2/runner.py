@@ -29,7 +29,7 @@ def generate_routefile():
 
     with open("data/cross.rou.xml", "w") as routes:
         print("""<routes>
-        <vType id="car" accel="3.5" decel="3.5" sigma="0.5" width="1.8" length="4.5" minGap="0" maxSpeed="25.2" guiShape="passenger"/>
+        <vType id="car" accel="3.5" decel="3.5" sigma="0.5" width="1.8" length="4.5" minGap="1" maxSpeed="25.2" guiShape="passenger"/>
 
         <route id="right" edges="51o 1i 2o 52i" />
         <route id="right_down" edges="51o 1i 3o 53i" />
@@ -142,10 +142,10 @@ if __name__ == "__main__":
         options.step = .1
     print((options.step))
     # for-loop
-    for i in range(100):
+    for i in range(1):
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "--tripinfo-output", "tripinfo.xml",
-                                 "--collision.action","none",
+                                 "--collision.action","warn",
                                  "--step-length", ".5"]
                                  # "--begin", "400"]
         )
