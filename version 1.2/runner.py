@@ -105,6 +105,9 @@ def run():
     df = pd.DataFrame([ [state, actions_rewards] for state, actions_rewards in Q_i.items()],  columns=['state', 'Actions Rewards'])
     print(df.to_csv("./output/qtable.csv"))
 
+    df = pd.DataFrame([[state, actions_rewards] for state, actions_rewards in Q_I.items()],
+                      columns=['state', 'Actions Rewards'])
+    print(df.to_csv("./output/qtableCoordinated.csv"))
 
 
     traci.close()
