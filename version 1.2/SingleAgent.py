@@ -3,6 +3,7 @@ sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), 'tools'))
 from collections import defaultdict, deque
 import traci
 import random
+import AutoVehicle
 from random import randrange
 import numpy as np
 import pickle
@@ -46,11 +47,11 @@ class SingleAgent():
     def joint_action(self):
         return np.zeros(self.nA_joint)
 
-    def train(self, episode):
+    def train(self, episode , existing_agents ,my_env ):
         if self.algorithm == 'qlearning':
-            return self.q_learning(episode)
+            return self.q_learning(episode ,existing_agents, my_env)
 
-    def q_learning(self, episode):
+    def q_learning(self, episode , existing_agents , my_env):
         # initialize empty dictionary of arrays
 
         def update_individual(state, reward, chosen_action, next_state):
@@ -119,7 +120,26 @@ class SingleAgent():
             car_state_action_reward_nextState.append((car, current_state, action, reward, next_state, other_car_id))
 
 
-        self.env.updateStates()
+        #self.env.updateStates()
+        traci.simulationStep()
+        arv = traci.simulation.getArrivedIDList()
+        dep = traci.simulation.getDepartedIDList()
+
+        # ADD newly added cars as an agents
+        for car_id in dep:
+            existing_agents.append(AutoVehicle.AutoVehicle(car_id))
+
+        # Remove the arrived-to-destination cars
+        for agent in existing_agents:
+            if agent.ID in arv:
+                existing_agents.remove(agent)
+
+        # Cars in
+        my_env.updateIntersectionAgents(existing_agents)
+        my_env.updateStates()
+
+        for agent in my_env.intersectionAgentList:
+            joint = my_env.is_overlap(agent)
 
         for car, current_state, action, reward, next_state, other_car_id in car_state_action_reward_nextState:
             if(len(self.env.is_overlap(car)) == 0 and car.isPrevIndividual):

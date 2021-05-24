@@ -69,29 +69,29 @@ def run(episode):
     while traci.simulation.getMinExpectedNumber() > 0:
         step += 1
         time = traci.simulation.getTime()
-        traci.simulationStep()
-        arv = traci.simulation.getArrivedIDList()
-        dep = traci.simulation.getDepartedIDList()
+        # traci.simulationStep()
+        # arv = traci.simulation.getArrivedIDList()
+        # dep = traci.simulation.getDepartedIDList()
+        #
+        # # ADD newly added cars as an agents
+        # for car_id in dep:
+        #     existing_agents.append(AutoVehicle.AutoVehicle(car_id))
+        #
+        # # Remove the arrived-to-destination cars
+        # for agent in existing_agents:
+        #     if agent.ID in arv:
+        #         existing_agents.remove(agent)
+        #
+        # # Cars in
+        # my_env.updateIntersectionAgents(existing_agents)
+        # my_env.updateStates()
+        #
+        # for agent in my_env.intersectionAgentList:
+        #     joint = my_env.is_overlap(agent)
+            # if len(joint) > 0:
+            #     print(time, joint)
 
-        # ADD newly added cars as an agents
-        for car_id in dep:
-            existing_agents.append(AutoVehicle.AutoVehicle(car_id))
-
-        # Remove the arrived-to-destination cars
-        for agent in existing_agents:
-            if agent.ID in arv:
-                existing_agents.remove(agent)
-
-        # Cars in
-        my_env.updateIntersectionAgents(existing_agents)
-        my_env.updateStates()
-
-        for agent in my_env.intersectionAgentList:
-            joint = my_env.is_overlap(agent)
-            if len(joint) > 0:
-                print(time, joint)
-
-        Q_i, Q_I = trainer.train(episode)
+        Q_i, Q_I = trainer.train(episode ,  existing_agents ,my_env)
         # print("Train Done")
         # print(Q_i)
         # print(f"In Episode {i}: Q table is ")
