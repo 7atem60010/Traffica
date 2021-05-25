@@ -155,21 +155,21 @@ class SingleAgent():
 
 
             elif(len(self.env.is_overlap(car)) > 0 and car.isPrevIndividual):
-                print("In coordinated and switched to individual")
+                # print("In coordinated and switched to individual")
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
                 update_from_individual_to_coordinated(current_state,reward, action, coordinated_state)
 
             elif(len(self.env.is_overlap(car)) == 0 and not car.isPrevIndividual):
-                print("In Individual and switched to coordinated")
+                # print("In Individual and switched to coordinated")
                 next_state_1 = next_state
                 next_state_2 = other_car_state
                 update_from_coordinated_to_individual(current_state, reward, action, next_state_1, next_state_2)
 
 
             elif(len(self.env.is_overlap(car)) > 0 and not car.isPrevIndividual):
-                print("In coordinated and still in coordinated")
+                # print("In coordinated and still in coordinated")
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
