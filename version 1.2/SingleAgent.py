@@ -19,12 +19,10 @@ class SingleAgent():
 
         if algorithm == 'qlearning':
             self.exp_exp_tradeoff = random.uniform(0, 1)
-            self.epsilon = 1.0
-            self.gamma = 0.618
-            self.alpha = 0.7
-            self.max_epsilon = 1.0
+            self.epsilon = 0.9
+            self.gamma = 0.9
+            self.alpha = 0.05
             self.min_epsilon = 0.01
-            self.decay_rate = 0.01
             self.nA = len(self.env.ActionsList)
             self.nA_joint = len(self.env.ActionsList) ** len(self.env.ActionsList)
 
@@ -108,6 +106,8 @@ class SingleAgent():
 
         car_state_action_reward_nextState =[]
 
+        state_with_reward_dict = {}
+
         for car in self.env.intersectionAgentList:
             current_state = self.env.states[car.ID]
             in_joint_state_with = self.env.is_overlap(car)
@@ -137,16 +137,20 @@ class SingleAgent():
                 car.dec()
             elif action == 2:
                 car.keepgoing()
-            car.UpdateStatus()
 
-            next_state = self.env.states[car.ID]
-            reward = self.env.get_agent_individual_reward(car)
-            car_state_action_reward_nextState.append((car, current_state, action, reward, next_state, other_car_state))
+            state_with_reward_dict[car.ID] = (car, current_state, action, other_car_state)
 
-
-        #self.env.updateStates()
 
         update_env()
+
+        for car in self.env.intersectionAgentList:
+            try:
+                (car, current_state, action, other_car_state) = state_with_reward_dict[car.ID]
+                next_state = self.env.states[car.ID]
+                reward = self.env.get_agent_individual_reward(car)
+                car_state_action_reward_nextState.append((car, current_state, action, reward, next_state, other_car_state))
+            except:
+                t = 1
 
         for car, current_state, action, reward, next_state, other_car_state in car_state_action_reward_nextState:
             if(len(self.env.is_overlap(car)) == 0 and car.isPrevIndividual):

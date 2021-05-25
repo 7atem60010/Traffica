@@ -54,7 +54,7 @@ def generate_routefile():
             for route in myroutes:
                 r = random.uniform(0,1)
                 if r < p:
-                    print(f'        <vehicle id="{route}_{vehNr}" type="car" speed="27.89" route="{route}" depart="{i}" />' , file=routes)
+                    print(f'        <vehicle id="{route}_{vehNr}" type="car"  route="{route}" depart="{i}" />' , file=routes)
                     vehNr += 1
         print("</routes>", file=routes)
 
