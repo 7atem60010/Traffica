@@ -54,7 +54,7 @@ def generate_routefile():
             for route in myroutes:
                 r = random.uniform(0,1)
                 if r < p:
-                    print(f'        <vehicle id="{route}_{vehNr}" type="car" route="{route}" depart="{i}" />' , file=routes)
+                    print(f'        <vehicle id="{route}_{vehNr}" type="car" speed="27.89" route="{route}" depart="{i}" />' , file=routes)
                     vehNr += 1
         print("</routes>", file=routes)
 
@@ -145,11 +145,17 @@ if __name__ == "__main__":
         options.step = .1
     print((options.step))
     # for-loop
+    # for i in range(100000000000,100000000001):
     for i in range(1):
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "--tripinfo-output", "tripinfo.xml",
+                                 "--collision.mingap-factor", "0",
                                  "--collision.action","none",
-                                 "--step-length", ".5"]
+                                 "--step-length", ".5",
+                                 "--time-to-teleport", "-1",
+                                 "--time-to-teleport.highways", "-1",
+                                 "--time-to-teleport.disconnected", "-1"]
+
                                  # "--begin", "400"]
         )
         # save the csv
