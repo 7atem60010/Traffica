@@ -99,8 +99,8 @@ def run(episode):
     with open("./output/Q_i.pickle", "wb") as f:
         pickle.dump(Q_i, f)
 
-    with open("./output/Q_I.pickle", "wb") as f:
-        pickle.dump(Q_I, f)
+    with open("./output/Q_I_coordinated.pickle", "wb") as f2:
+        pickle.dump(Q_I, f2)
 
     df = pd.DataFrame([ [state, actions_rewards] for state, actions_rewards in Q_i.items()],  columns=['state', 'Actions Rewards'])
     print(df.to_csv("./output/qtable.csv"))
