@@ -47,7 +47,7 @@ def generate_routefile():
         """, file=routes)
         vehNr = 0
         # demand per second from different directions
-        p = 1/100
+        p = 1/10
         #TODO: difference between time step and simulation step
         myroutes = ['right','right_up','right_down','left','left_up','left_down',"up", "up_right" , "up_left" , "down_right" , "down_left" , "down"]
         for i in range(N):
@@ -67,6 +67,16 @@ def run(episode):
     trainer = SingleAgent.SingleAgent(my_env)
 
     while traci.simulation.getMinExpectedNumber() > 0:
+        traffic_id_list = traci.trafficlight.getIDList()
+        print('this is spartaz', traffic_id_list)
+        if step == 0:
+            for id in traffic_id_list:
+                print(id)
+                logic = traci.trafficlight.Logic("new-program" + id, 0, 0, phases=self.phases)
+                traci.trafficlight.setCompleteRedYellowGreenDefinition(id, logic)
+                print(getRedYellowGreenState(id))
+                traci.trafficlight.setPhase(id, 0)
+
         step += 1
         time = traci.simulation.getTime()
         # traci.simulationStep()
