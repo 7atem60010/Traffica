@@ -65,7 +65,12 @@ class SingleAgent():
             for agent in existing_agents:
                 if agent.ID in arv:
                     existing_agents.remove(agent)
-
+            
+            for agent in existing_agents:
+                try:
+                    _ = traci.vehicle.getPosition(agent.ID)
+                except:
+                    existing_agents.remove(agent)
             # Cars in
             my_env.updateIntersectionAgents(existing_agents)
             my_env.updateStates()
@@ -96,7 +101,7 @@ class SingleAgent():
 
         def update_from_individual_to_coordinated(state, reward, chosen_action, next_state):
             best_action = np.argmax(self.Q_I[f"{next_state}"])
-            print(state)
+            # print(state)
             self.Q_i[f"{state}"][chosen_action] = (1 - self.alpha) * self.Q_i[f"{state}"][chosen_action] + self.alpha *\
                                                   (reward + self.gamma * 0.5 * (self.Q_I[f"{next_state}"][best_action]))
 

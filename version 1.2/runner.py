@@ -9,6 +9,7 @@ import sys
 import optparse
 import random
 import pickle
+import numpy as np
 from collections import defaultdict
 # we need to import python modules from the $SUMO_HOME/tools directory
 if 'SUMO_HOME' in os.environ:
@@ -23,10 +24,11 @@ import env
 from sumolib import checkBinary  # noqa
 import traci  # noqa
 
-def generate_routefile():
+def generate_routefile(num_vehicles):
     random.seed(420)  # make tests reproducible
-    N = 360  # number of time steps
-
+    dT = .5
+    N = 3600  # number of seconds
+    S = N/dT
     with open("data/cross.rou.xml", "w") as routes:
         print("""<routes>
         <vType id="car" accel="3.5" decel="3.5" sigma="0.5" width="1.8" length="4.5" minGap="1" maxSpeed="25.2" guiShape="passenger"/>
@@ -47,12 +49,12 @@ def generate_routefile():
         """, file=routes)
         vehNr = 0
         # demand per second from different directions
-        p = 1/10
-        #TODO: difference between time step and simulation step
+        p = (num_vehicles/S)/12
+        # TODO: difference between time step and simulation step
         myroutes = ['right','right_up','right_down','left','left_up','left_down',"up", "up_right" , "up_left" , "down_right" , "down_left" , "down"]
-        for i in range(N):
+        for i in np.arange(1, N , dT):
             for route in myroutes:
-                r = random.uniform(0,1)
+                r = random.uniform(0, 1)
                 if r < p:
                     print(f'        <vehicle id="{route}_{vehNr}" type="car"  route="{route}" depart="{i}" />' , file=routes)
                     vehNr += 1
@@ -61,50 +63,18 @@ def generate_routefile():
 def run(episode):
     """execute the TraCI control loop"""
     step = 0
-    generate_routefile()
+    generate_routefile(3000)
     existing_agents = []
     my_env = env.env()
     trainer = SingleAgent.SingleAgent(my_env)
 
     while traci.simulation.getMinExpectedNumber() > 0:
-        traffic_id_list = traci.trafficlight.getIDList()
-        print('this is spartaz', traffic_id_list)
-        if step == 0:
-            for id in traffic_id_list:
-                print(id)
-                logic = traci.trafficlight.Logic("new-program" + id, 0, 0, phases=self.phases)
-                traci.trafficlight.setCompleteRedYellowGreenDefinition(id, logic)
-                print(getRedYellowGreenState(id))
-                traci.trafficlight.setPhase(id, 0)
-
         step += 1
         time = traci.simulation.getTime()
-        # traci.simulationStep()
-        # arv = traci.simulation.getArrivedIDList()
-        # dep = traci.simulation.getDepartedIDList()
-        #
-        # # ADD newly added cars as an agents
-        # for car_id in dep:
-        #     existing_agents.append(AutoVehicle.AutoVehicle(car_id))
-        #
-        # # Remove the arrived-to-destination cars
-        # for agent in existing_agents:
-        #     if agent.ID in arv:
-        #         existing_agents.remove(agent)
-        #
-        # # Cars in
-        # my_env.updateIntersectionAgents(existing_agents)
-        # my_env.updateStates()
-        #
-        # for agent in my_env.intersectionAgentList:
-        #     joint = my_env.is_overlap(agent)
-            # if len(joint) > 0:
-            #     print(time, joint)
+        print(time)
 
         Q_i, Q_I = trainer.train(episode ,  existing_agents ,my_env)
-        # print("Train Done")
-        # print(Q_i)
-        # print(f"In Episode {i}: Q table is ")
+
 
     with open("./output/Q_i.pickle", "wb") as f:
         pickle.dump(Q_i, f)
@@ -163,10 +133,8 @@ if __name__ == "__main__":
                                  "--collision.action","none",
                                  "--step-length", ".5",
                                  "--time-to-teleport", "-1",
-                                 "--time-to-teleport.highways", "-1",
-                                 "--time-to-teleport.disconnected", "-1"]
-
-                                 # "--begin", "400"]
+                                 "--time-to-teleport.highways", "-1"]
+                                 # "--time-to-teleport.disconnected", "-1"]
         )
         # save the csv
         print("Simulation Step: ", i)
