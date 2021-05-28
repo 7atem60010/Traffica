@@ -262,6 +262,7 @@
         <request index="14" response="0000111100001110" foes="0000111110001110" cont="0"/>
         <request index="15" response="0000111001101110" foes="0000111001101110" cont="0"/>
     </junction>
+
     <junction id="1" type="priority" x="10.00" y="510.00" incLanes="1o_0 1o_1 1o_2 51o_0 51o_1" intLanes=":1_0_0 :1_4_0 :1_2_0 :1_5_0" shape="14.00,519.60 14.00,500.40 6.00,503.60 6.00,516.40">
         <request index="0" response="0000" foes="1000" cont="0"/>
         <request index="1" response="0100" foes="0100" cont="1"/>
