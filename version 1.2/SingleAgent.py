@@ -148,11 +148,14 @@ class SingleAgent():
 
         update_env()
 
+        step_reward = 0
+
         for car in self.env.intersectionAgentList:
             try:
                 (car, current_state, action, other_car_state) = state_with_reward_dict[car.ID]
                 next_state = self.env.states[car.ID]
                 reward = self.env.get_agent_individual_reward(car)
+                step_reward += reward
                 car_state_action_reward_nextState.append((car, current_state, action, reward, next_state, other_car_state))
             except:
                 t = 1
@@ -184,7 +187,7 @@ class SingleAgent():
                 coordinated_state = (next_state, car_to_coordinate_with_state)
                 update_coordinated(current_state,reward, action, coordinated_state)
 
-        return self.Q_i, self.Q_I
+        return self.Q_i, self.Q_I, step_reward
 
 
 

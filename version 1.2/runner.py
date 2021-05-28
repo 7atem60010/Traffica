@@ -49,7 +49,7 @@ def generate_routefile(num_vehicles):
         """, file=routes)
         vehNr = 0
         # demand per second from different directions
-        p = (num_vehicles/S)/12
+        p = (num_vehicles/S)/100
         # TODO: difference between time step and simulation step
         myroutes = ['right','right_up','right_down','left','left_up','left_down',"up", "up_right" , "up_left" , "down_right" , "down_left" , "down"]
         for i in np.arange(1, N , dT):
@@ -59,28 +59,44 @@ def generate_routefile(num_vehicles):
                     print(f'        <vehicle id="{route}_{vehNr}" type="car"  route="{route}" depart="{i}" />' , file=routes)
                     vehNr += 1
         print("</routes>", file=routes)
+        return vehNr
 
 def run(episode):
     """execute the TraCI control loop"""
     step = 0
-    generate_routefile(3000)
+    vehNr = generate_routefile(3000)
     existing_agents = []
     my_env = env.env()
     trainer = SingleAgent.SingleAgent(my_env)
+    episode_reward_sum = 0
 
     while traci.simulation.getMinExpectedNumber() > 0:
         step += 1
         time = traci.simulation.getTime()
-        print(time)
 
-        Q_i, Q_I = trainer.train(episode ,  existing_agents ,my_env)
+        Q_i, Q_I, step_reward = trainer.train(episode ,  existing_agents ,my_env)
+        episode_reward_sum += step_reward
 
+    try:
+        with open("./output/episode_reward_dict.pickle", "rb") as reward_dic_reader:
+            episode_reward_dict = pickle.load(reward_dic_reader)
+    except:
+        episode_reward_dict = defaultdict(int)
+
+    episode_reward_dict[f"{episode}"] = episode_reward_sum / vehNr
+
+    with open("./output/episode_reward_dict.pickle", "wb") as reward_dic_writer:
+        pickle.dump(episode_reward_dict, reward_dic_writer)
 
     with open("./output/Q_i.pickle", "wb") as f:
         pickle.dump(Q_i, f)
 
     with open("./output/Q_I_coordinated.pickle", "wb") as f2:
         pickle.dump(Q_I, f2)
+
+    df = pd.DataFrame([[episode, reward] for episode, reward in episode_reward_dict.items()],
+                      columns=['Episode', 'Reward'])
+    print(df.to_csv("./output/episode_reward.csv"))
 
     df = pd.DataFrame([ [state, actions_rewards] for state, actions_rewards in Q_i.items()],  columns=['state', 'Actions Rewards'])
     print(df.to_csv("./output/qtable.csv"))
@@ -126,7 +142,7 @@ if __name__ == "__main__":
     print((options.step))
     # for-loop
     # for i in range(100000000000,100000000001):
-    for i in range(1):
+    for i in range(10):
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--collision.mingap-factor", "0",
