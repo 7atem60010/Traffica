@@ -49,11 +49,18 @@ def generate_routefile(num_vehicles):
         """, file=routes)
         vehNr = 0
         # demand per second from different directions
+<<<<<<< HEAD
         p = (num_vehicles/S)/100
+=======
+        p = (num_vehicles/S)
+>>>>>>> 6c83954629751486508b5cedbfcd367c1882638e
         # TODO: difference between time step and simulation step
         myroutes = ['right','right_up','right_down','left','left_up','left_down',"up", "up_right" , "up_left" , "down_right" , "down_left" , "down"]
+        myroutes = ['right','left',"up", "down"]
+        Ps = [p,p/2,p/2,p/2]
         for i in np.arange(1, N , dT):
-            for route in myroutes:
+            for j,route in enumerate(myroutes):
+                p = Ps[j]
                 r = random.uniform(0, 1)
                 if r < p:
                     print(f'        <vehicle id="{route}_{vehNr}" type="car"  route="{route}" depart="{i}" />' , file=routes)
@@ -73,6 +80,10 @@ def run(episode):
     while traci.simulation.getMinExpectedNumber() > 0:
         step += 1
         time = traci.simulation.getTime()
+<<<<<<< HEAD
+=======
+        # print(time)
+>>>>>>> 6c83954629751486508b5cedbfcd367c1882638e
 
         Q_i, Q_I, step_reward = trainer.train(episode ,  existing_agents ,my_env)
         episode_reward_sum += step_reward
