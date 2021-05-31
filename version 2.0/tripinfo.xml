@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 29 ماي, 2021 06:57:02 م by Eclipse SUMO GUI Version v1_8_0+0922-7b2bbb9a60
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="2way-single-intersection/single-intersection.net.xml"/>
+        <route-files value="2way-single-intersection/single-intersection-vhvh.rou.xml"/>
+    </input>
+
+    <output>
+        <tripinfo-output value="tripinfo.xml"/>
+    </output>
+
+    <time>
+        <step-length value=".5"/>
+    </time>
+
+    <processing>
+        <collision.action value="none"/>
+        <collision.mingap-factor value="0"/>
+        <time-to-teleport value="-1"/>
+        <time-to-teleport.highways value="-1"/>
+    </processing>
+
+    <traci_server>
+        <remote-port value="47681"/>
+    </traci_server>
+
+    <gui_only>
+        <tracker-interval value="0.5"/>
+    </gui_only>
+
+</configuration>
+-->
+
+<tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+</tripinfos>
