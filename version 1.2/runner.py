@@ -75,14 +75,19 @@ def run(episode):
     my_env = env.env()
     trainer = SingleAgent.SingleAgent(my_env)
     episode_reward_sum = 0
+    waiting_time_sum = 0
 
     while traci.simulation.getMinExpectedNumber() > 0:
         step += 1
         time = traci.simulation.getTime()
 
 
-        Q_i, Q_I, step_reward = trainer.train(episode ,  existing_agents ,my_env)
+        Q_i, Q_I, step_reward, step_waiting_time, is_dead_lock = trainer.train(episode ,  existing_agents ,my_env)
         episode_reward_sum += step_reward
+        waiting_time_sum += step_waiting_time
+
+        if is_dead_lock:
+            break
 
     try:
         with open("./output/episode_reward_dict.pickle", "rb") as reward_dic_reader:
@@ -90,16 +95,30 @@ def run(episode):
     except:
         episode_reward_dict = defaultdict(int)
 
+    try:
+        with open("./output/average_waiting_time_dict.pickle", "rb") as waiting_time_reader:
+            average_waiting_time_dict = pickle.load(waiting_time_reader)
+    except:
+        average_waiting_time_dict = defaultdict(int)
+
     episode_reward_dict[f"{episode}"] = episode_reward_sum / vehNr
+    average_waiting_time_dict[f"{episode}"] = waiting_time_sum / vehNr
 
     with open("./output/episode_reward_dict.pickle", "wb") as reward_dic_writer:
         pickle.dump(episode_reward_dict, reward_dic_writer)
+
+    with open("./output/average_waiting_time_dict.pickle", "wb") as waiting_time_writer:
+        pickle.dump(average_waiting_time_dict, waiting_time_writer)
 
     with open("./output/Q_i.pickle", "wb") as f:
         pickle.dump(Q_i, f)
 
     with open("./output/Q_I_coordinated.pickle", "wb") as f2:
         pickle.dump(Q_I, f2)
+
+    df = pd.DataFrame([[episode, average_waiting_time] for episode, average_waiting_time in episode_reward_dict.items()],
+                      columns=['Episode', 'Average Waiting Time'])
+    print(df.to_csv("./output/episode_waiting_time.csv"))
 
     df = pd.DataFrame([[episode, reward] for episode, reward in episode_reward_dict.items()],
                       columns=['Episode', 'Reward'])

@@ -3,6 +3,7 @@ sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), 'tools'))
 import numpy as np
 import traci
 import math
+from collections import deque
 from random import randrange
 
 class AutoVehicle:
@@ -45,11 +46,11 @@ class AutoVehicle:
         traci.vehicle.setAccel(self.ID , self.accl)
         self.L, self.W = traci.vehicle.getLength(self.ID), traci.vehicle.getWidth(self.ID)
         self.DoI = 0
+        self.max_len_old_keep = 10
+        self.old_states = deque([], maxlen=self.max_len_old_keep)
 
 
-
-
-    ###################################################################
+        ###################################################################
     def inIntersection(self):
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
         self.inter = False
@@ -61,6 +62,12 @@ class AutoVehicle:
         return self.inter
 
     ############################# Getter ###############################
+
+    def add_current_state(self, current_state):
+        self.old_states.append(f"{current_state}")
+
+    def is_potential_dead_lock(self):
+        return len(set(self.old_states)) == 1 and len(list(self.old_states)) > 8
 
     def getCells(self,lane_len,side_cells,intersection_width): #retracted
         x,y = traci.vehicle.getPosition(self.ID)

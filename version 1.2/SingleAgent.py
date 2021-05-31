@@ -149,6 +149,7 @@ class SingleAgent():
         update_env()
 
         step_reward = 0
+        step_waiting_time = 0
 
         for car in self.env.intersectionAgentList:
             try:
@@ -156,14 +157,31 @@ class SingleAgent():
                 next_state = self.env.states[car.ID]
                 reward = self.env.get_agent_individual_reward(car)
                 step_reward += reward
+                step_waiting_time += 0.5
                 car_state_action_reward_nextState.append((car, current_state, action, reward, next_state, other_car_state))
             except:
                 t = 1
 
+        locked_count = 0
+        is_dead_lock = False
+        dead_lock_states = []
+        dead_lock_reward  = -2000
+        for car, current_state, action, reward, next_state, other_car_state in car_state_action_reward_nextState:
+            car.add_current_state(current_state)
+            if car.is_potential_dead_lock():
+                dead_lock_states.append(current_state)
+                locked_count += 1
+            if locked_count > 3 :
+                is_dead_lock = True
+
+
         for car, current_state, action, reward, next_state, other_car_state in car_state_action_reward_nextState:
             if(len(self.env.is_overlap(car)) == 0 and car.isPrevIndividual):
                 # print("In individual and still in individual")
-                update_individual(current_state, reward, action, next_state)
+                if is_dead_lock and current_state in dead_lock_states:
+                    update_individual(current_state, dead_lock_reward, action, next_state)
+                else:
+                    update_individual(current_state, reward, action, next_state)
 
 
             elif(len(self.env.is_overlap(car)) > 0 and car.isPrevIndividual):
@@ -171,13 +189,19 @@ class SingleAgent():
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
-                update_from_individual_to_coordinated(current_state,reward, action, coordinated_state)
+                if is_dead_lock and current_state in dead_lock_states:
+                    update_from_individual_to_coordinated(current_state, dead_lock_reward, action, coordinated_state)
+                else:
+                    update_from_individual_to_coordinated(current_state,reward, action, coordinated_state)
 
             elif(len(self.env.is_overlap(car)) == 0 and not car.isPrevIndividual):
                 # print("In Individual and switched to coordinated")
                 next_state_1 = next_state
                 next_state_2 = other_car_state
-                update_from_coordinated_to_individual(current_state, reward, action, next_state_1, next_state_2)
+                if is_dead_lock and current_state in dead_lock_states:
+                    update_from_coordinated_to_individual(current_state, dead_lock_reward, action, next_state_1, next_state_2)
+                else:
+                    update_from_coordinated_to_individual(current_state, reward, action, next_state_1, next_state_2)
 
 
             elif(len(self.env.is_overlap(car)) > 0 and not car.isPrevIndividual):
@@ -185,9 +209,15 @@ class SingleAgent():
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
-                update_coordinated(current_state,reward, action, coordinated_state)
+                if is_dead_lock and current_state in dead_lock_states:
+                    update_coordinated(current_state, dead_lock_reward, action, coordinated_state)
+                else:
+                    update_coordinated(current_state,reward, action, coordinated_state)
 
-        return self.Q_i, self.Q_I, step_reward
+
+
+
+        return self.Q_i, self.Q_I, step_reward, step_waiting_time, is_dead_lock
 
 
 
