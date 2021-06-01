@@ -3,7 +3,7 @@ sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), 'tools'))
 from collections import defaultdict, deque
 import traci
 import random
-import AutoVehicle
+from Autovechile import AutoVehicle
 from random import randrange
 import numpy as np
 import pickle
@@ -51,7 +51,6 @@ class SingleAgent():
 
     def q_learning(self, episode , existing_agents , my_env):
         # initialize empty dictionary of arrays
-
         def update_env():
             traci.simulationStep()
             arv = traci.simulation.getArrivedIDList()
@@ -104,7 +103,6 @@ class SingleAgent():
             # print(state)
             self.Q_i[f"{state}"][chosen_action] = (1 - self.alpha) * self.Q_i[f"{state}"][chosen_action] + self.alpha *\
                                                   (reward + self.gamma * 0.5 * (self.Q_I[f"{next_state}"][best_action]))
-
         self.epsilon = self.epsilon / episode
         if self.epsilon < self.min_epsilon:
             self.epsilon = self.min_epsilon
@@ -112,7 +110,7 @@ class SingleAgent():
         car_state_action_reward_nextState =[]
 
         state_with_reward_dict = {}
-
+        print(len(self.env.intersectionAgentList))
         for car in self.env.intersectionAgentList:
             current_state = self.env.states[car.ID]
             in_joint_state_with = self.env.is_overlap(car)
@@ -148,40 +146,19 @@ class SingleAgent():
 
         update_env()
 
-        step_reward = 0
-        step_waiting_time = 0
-
         for car in self.env.intersectionAgentList:
             try:
                 (car, current_state, action, other_car_state) = state_with_reward_dict[car.ID]
                 next_state = self.env.states[car.ID]
                 reward = self.env.get_agent_individual_reward(car)
-                step_reward += reward
-                step_waiting_time += 0.5
                 car_state_action_reward_nextState.append((car, current_state, action, reward, next_state, other_car_state))
             except:
                 t = 1
 
-        locked_count = 0
-        is_dead_lock = False
-        dead_lock_states = []
-        dead_lock_reward  = -2000
-        for car, current_state, action, reward, next_state, other_car_state in car_state_action_reward_nextState:
-            car.add_current_state(current_state)
-            if car.is_potential_dead_lock():
-                dead_lock_states.append(current_state)
-                locked_count += 1
-            if locked_count > 3 :
-                is_dead_lock = True
-
-
         for car, current_state, action, reward, next_state, other_car_state in car_state_action_reward_nextState:
             if(len(self.env.is_overlap(car)) == 0 and car.isPrevIndividual):
                 # print("In individual and still in individual")
-                if is_dead_lock and current_state in dead_lock_states:
-                    update_individual(current_state, dead_lock_reward, action, next_state)
-                else:
-                    update_individual(current_state, reward, action, next_state)
+                update_individual(current_state, reward, action, next_state)
 
 
             elif(len(self.env.is_overlap(car)) > 0 and car.isPrevIndividual):
@@ -189,19 +166,13 @@ class SingleAgent():
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
-                if is_dead_lock and current_state in dead_lock_states:
-                    update_from_individual_to_coordinated(current_state, dead_lock_reward, action, coordinated_state)
-                else:
-                    update_from_individual_to_coordinated(current_state,reward, action, coordinated_state)
+                update_from_individual_to_coordinated(current_state,reward, action, coordinated_state)
 
             elif(len(self.env.is_overlap(car)) == 0 and not car.isPrevIndividual):
                 # print("In Individual and switched to coordinated")
                 next_state_1 = next_state
                 next_state_2 = other_car_state
-                if is_dead_lock and current_state in dead_lock_states:
-                    update_from_coordinated_to_individual(current_state, dead_lock_reward, action, next_state_1, next_state_2)
-                else:
-                    update_from_coordinated_to_individual(current_state, reward, action, next_state_1, next_state_2)
+                update_from_coordinated_to_individual(current_state, reward, action, next_state_1, next_state_2)
 
 
             elif(len(self.env.is_overlap(car)) > 0 and not car.isPrevIndividual):
@@ -209,15 +180,9 @@ class SingleAgent():
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
-                if is_dead_lock and current_state in dead_lock_states:
-                    update_coordinated(current_state, dead_lock_reward, action, coordinated_state)
-                else:
-                    update_coordinated(current_state,reward, action, coordinated_state)
+                update_coordinated(current_state,reward, action, coordinated_state)
 
-
-
-
-        return self.Q_i, self.Q_I, step_reward, step_waiting_time, is_dead_lock
+        return self.Q_i, self.Q_I
 
 
 

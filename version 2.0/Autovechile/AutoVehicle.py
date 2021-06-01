@@ -3,7 +3,6 @@ sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), 'tools'))
 import numpy as np
 import traci
 import math
-from collections import deque
 from random import randrange
 
 class AutoVehicle:
@@ -19,8 +18,8 @@ class AutoVehicle:
         self.currentspeed = 0  # We use cell/step convention
         self._pos = (0, 0)
         self._step = -1
-        self.TopLeft = (499.50,499.50)
-        self.BotRight = (520.50,520.50)
+        self.TopLeft = (143.6, 156.40)
+        self.BotRight = (156.40 , 143.6)
         self.intersection_Xlen = self.BotRight[0] - self.TopLeft[0]
         self.intersection_Ylen = self.BotRight[1] - self.TopLeft[1]
         self.cells_per_side = 24
@@ -35,8 +34,8 @@ class AutoVehicle:
         self.accSumo = 3.5 # m/s^2
         # self.set
         ################# Intersection dimensions ################
-        self.TopLeft = (499.50, 499.50)
-        self.BotRight = (520.50, 520.50)
+        self.TopLeft = (143.6, 156.40)
+        self.BotRight = (156.40, 143.6)
         ################################################
 
         self.isPrevIndividual = True
@@ -46,28 +45,24 @@ class AutoVehicle:
         traci.vehicle.setAccel(self.ID , self.accl)
         self.L, self.W = traci.vehicle.getLength(self.ID), traci.vehicle.getWidth(self.ID)
         self.DoI = 0
-        self.max_len_old_keep = 10
-        self.old_states = deque([], maxlen=self.max_len_old_keep)
 
 
-        ###################################################################
+
+
+    ###################################################################
     def inIntersection(self):
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
+        print(self.pos)
         self.inter = False
-        if self.pos[0] > self.TopLeft[0] and  self.pos[0] < self.BotRight[0] and self.pos[1] > self.TopLeft[1] and  self.pos[1] < self.BotRight[1]:
+        if self.pos[0] > self.TopLeft[0] and  self.pos[0] < self.BotRight[0] and self.pos[1] < self.TopLeft[1] and  self.pos[1] > self.BotRight[1]:
             self.inter = True
         if not self.inter:
             self.lane = traci.vehicle.getLaneID(self.ID)
             self.queuelen = traci.lane.getLastStepVehicleNumber(self.lane)
+        print(self.inter)
         return self.inter
 
     ############################# Getter ###############################
-
-    def add_current_state(self, current_state):
-        self.old_states.append(f"{current_state}")
-
-    def is_potential_dead_lock(self):
-        return len(set(self.old_states)) == 1 and len(list(self.old_states)) > 8
 
     def getCells(self,lane_len,side_cells,intersection_width): #retracted
         x,y = traci.vehicle.getPosition(self.ID)

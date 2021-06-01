@@ -18,16 +18,16 @@ if 'SUMO_HOME' in os.environ:
 else:
     sys.exit("please declare environment variable 'SUMO_HOME'")
 
-import AutoVehicle
-import SingleAgent
-import env
+from Autovechile import AutoVehicle
+from Autovechile import SingleAgent
+from Autovechile import env
 from sumolib import checkBinary  # noqa
 import traci  # noqa
 
 def generate_routefile(num_vehicles):
     random.seed(420)  # make tests reproducible
     dT = .5
-    N = 1800  # number of seconds
+    N = 3600  # number of seconds
     S = N/dT
     with open("data/cross.rou.xml", "w") as routes:
         print("""<routes>
@@ -49,80 +49,38 @@ def generate_routefile(num_vehicles):
         """, file=routes)
         vehNr = 0
         # demand per second from different directions
-
-        p = (num_vehicles/S)/100
-        p = (num_vehicles/S)
-
+        p = (num_vehicles/S)/12
         # TODO: difference between time step and simulation step
         myroutes = ['right','right_up','right_down','left','left_up','left_down',"up", "up_right" , "up_left" , "down_right" , "down_left" , "down"]
-        myroutes = ['right','left',"up", "down"]
-        Ps = [p,p/2,p/2,p/2]
         for i in np.arange(1, N , dT):
-            for j,route in enumerate(myroutes):
-                p = Ps[j]
+            for route in myroutes:
                 r = random.uniform(0, 1)
                 if r < p:
                     print(f'        <vehicle id="{route}_{vehNr}" type="car"  route="{route}" depart="{i}" />' , file=routes)
                     vehNr += 1
         print("</routes>", file=routes)
-        return vehNr
 
 def run(episode):
     """execute the TraCI control loop"""
     step = 0
-    vehNr = generate_routefile(1500)
+    #generate_routefile(3000)
     existing_agents = []
     my_env = env.env()
     trainer = SingleAgent.SingleAgent(my_env)
-    episode_reward_sum = 0
-    waiting_time_sum = 0
 
     while traci.simulation.getMinExpectedNumber() > 0:
         step += 1
         time = traci.simulation.getTime()
+        # print(time)
 
+        Q_i, Q_I = trainer.train(episode ,  existing_agents ,my_env)
 
-        Q_i, Q_I, step_reward, step_waiting_time, is_dead_lock = trainer.train(episode ,  existing_agents ,my_env)
-        episode_reward_sum += step_reward
-        waiting_time_sum += step_waiting_time
-
-        if is_dead_lock:
-            break
-
-    try:
-        with open("./output/episode_reward_dict.pickle", "rb") as reward_dic_reader:
-            episode_reward_dict = pickle.load(reward_dic_reader)
-    except:
-        episode_reward_dict = defaultdict(int)
-
-    try:
-        with open("./output/average_waiting_time_dict.pickle", "rb") as waiting_time_reader:
-            average_waiting_time_dict = pickle.load(waiting_time_reader)
-    except:
-        average_waiting_time_dict = defaultdict(int)
-
-    episode_reward_dict[f"{episode}"] = episode_reward_sum / vehNr
-    average_waiting_time_dict[f"{episode}"] = waiting_time_sum / vehNr
-
-    with open("./output/episode_reward_dict.pickle", "wb") as reward_dic_writer:
-        pickle.dump(episode_reward_dict, reward_dic_writer)
-
-    with open("./output/average_waiting_time_dict.pickle", "wb") as waiting_time_writer:
-        pickle.dump(average_waiting_time_dict, waiting_time_writer)
 
     with open("./output/Q_i.pickle", "wb") as f:
         pickle.dump(Q_i, f)
 
     with open("./output/Q_I_coordinated.pickle", "wb") as f2:
         pickle.dump(Q_I, f2)
-
-    df = pd.DataFrame([[episode, average_waiting_time] for episode, average_waiting_time in episode_reward_dict.items()],
-                      columns=['Episode', 'Average Waiting Time'])
-    print(df.to_csv("./output/episode_waiting_time.csv"))
-
-    df = pd.DataFrame([[episode, reward] for episode, reward in episode_reward_dict.items()],
-                      columns=['Episode', 'Reward'])
-    print(df.to_csv("./output/episode_reward.csv"))
 
     df = pd.DataFrame([ [state, actions_rewards] for state, actions_rewards in Q_i.items()],  columns=['state', 'Actions Rewards'])
     print(df.to_csv("./output/qtable.csv"))
@@ -165,11 +123,12 @@ if __name__ == "__main__":
     # subprocess and then the python script connects and runs
     if options.step is None:
         options.step = .1
-    print((options.step))
+    #print((options.step))
     # for-loop
     # for i in range(100000000000,100000000001):
-    for i in range(100):
-        traci.start([sumoBinary, "-c", "data/cross.sumocfg",
+    for i in range(1):
+        traci.start([sumoBinary, "-n", "2way-single-intersection/single-intersection.net.xml",
+                                 "-r" , "2way-single-intersection/single-intersection-vhvh.rou.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--collision.mingap-factor", "0",
                                  "--collision.action","none",

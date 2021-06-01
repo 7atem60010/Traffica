@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<<<<<<< HEAD
 <!-- generated on 2021-05-29 06:04:06 by Eclipse SUMO sumo Version 1.9.2
+=======
+<!-- generated on 2021-06-01 00:47:20 by Eclipse SUMO GUI Version 1.9.2
+>>>>>>> 6c13dfd4365fe9c1f530cf6be0f8a1162c649749
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -31,7 +35,11 @@
     </report>
 
     <traci_server>
+<<<<<<< HEAD
         <remote-port value="36693"/>
+=======
+        <remote-port value="49837"/>
+>>>>>>> 6c13dfd4365fe9c1f530cf6be0f8a1162c649749
     </traci_server>
 
     <gui_only>
@@ -42,6 +50,7 @@
 -->
 
 <tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+<<<<<<< HEAD
     <tripinfo id="down_1" depart="1.00" departLane="54o_0" departPos="4.60" departSpeed="0.00" departDelay="0.00" arrival="153.50" arrivalLane="53i_1" arrivalPos="6.00" arrivalSpeed="2.51" duration="152.50" routeLength="1015.40" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="7.32" rerouteNo="0" devices="tripinfo_down_1" vType="car@down_1" speedFactor="0.94" vaporized=""/>
     <tripinfo id="up_2" depart="1.50" departLane="53o_0" departPos="4.60" departSpeed="0.00" departDelay="0.00" arrival="154.00" arrivalLane="54i_1" arrivalPos="6.00" arrivalSpeed="2.73" duration="152.50" routeLength="1015.40" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="7.42" rerouteNo="0" devices="tripinfo_up_2" vType="car@up_2" speedFactor="1.01" vaporized=""/>
     <tripinfo id="down_4" depart="2.00" departLane="54o_0" departPos="4.60" departSpeed="0.00" departDelay="0.00" arrival="156.50" arrivalLane="53i_1" arrivalPos="6.00" arrivalSpeed="4.08" duration="154.50" routeLength="1015.40" waitingTime="2.00" waitingCount="1" stopTime="0.00" timeLoss="9.43" rerouteNo="0" devices="tripinfo_down_4" vType="car@down_4" speedFactor="1.03" vaporized=""/>
@@ -647,3 +656,6 @@
     <tripinfo id="down_1499" depart="970.50" departLane="54o_0" departPos="4.60" departSpeed="0.00" departDelay="259.00" arrival="1125.50" arrivalLane="53i_1" arrivalPos="6.00" arrivalSpeed="4.41" duration="155.00" routeLength="1015.40" waitingTime="2.50" waitingCount="1" stopTime="0.00" timeLoss="9.90" rerouteNo="0" devices="tripinfo_down_1499" vType="car@down_1499" speedFactor="1.03" vaporized=""/>
     <tripinfo id="up_1449" depart="971.50" departLane="53o_0" departPos="4.60" departSpeed="0.00" departDelay="282.00" arrival="1127.00" arrivalLane="54i_1" arrivalPos="6.00" arrivalSpeed="2.21" duration="155.50" routeLength="1015.40" waitingTime="2.00" waitingCount="1" stopTime="0.00" timeLoss="10.30" rerouteNo="0" devices="tripinfo_up_1449" vType="car@up_1449" speedFactor="1.06" vaporized=""/>
     <tripinfo id="down_1501"
+=======
+</tripinfos>
+>>>>>>> 6c13dfd4365fe9c1f530cf6be0f8a1162c649749
