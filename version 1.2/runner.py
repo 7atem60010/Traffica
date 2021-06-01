@@ -27,7 +27,7 @@ import traci  # noqa
 def generate_routefile(num_vehicles):
     random.seed(420)  # make tests reproducible
     dT = .5
-    N = 3600  # number of seconds
+    N = 1800  # number of seconds
     S = N/dT
     with open("data/cross.rou.xml", "w") as routes:
         print("""<routes>
@@ -70,7 +70,7 @@ def generate_routefile(num_vehicles):
 def run(episode):
     """execute the TraCI control loop"""
     step = 0
-    vehNr = generate_routefile(3000)
+    vehNr = generate_routefile(1500)
     existing_agents = []
     my_env = env.env()
     trainer = SingleAgent.SingleAgent(my_env)
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     print((options.step))
     # for-loop
     # for i in range(100000000000,100000000001):
-    for i in range(10):
+    for i in range(100):
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--collision.mingap-factor", "0",
