@@ -1,4 +1,5 @@
-import sys , os
+import sys, os
+
 sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), 'tools'))
 from collections import defaultdict, deque
 import traci
@@ -8,9 +9,10 @@ from random import randrange
 import numpy as np
 import pickle
 
+
 class SingleAgent():
 
-    def __init__(self, env , algorithm = 'qlearning' ):
+    def __init__(self, env, algorithm='qlearning'):
         self.algorithm = algorithm
         self.env = env
         self.ActionsDict = self.env.ActionsDict
@@ -38,19 +40,19 @@ class SingleAgent():
             except:
                 self.Q_I = defaultdict(self.indvidual_action)
 
-
     def indvidual_action(self):
         return np.zeros(self.nA)
 
     def joint_action(self):
         return np.zeros(self.nA_joint)
 
-    def train(self, episode , existing_agents ,my_env ):
+    def train(self, episode, existing_agents, my_env):
         if self.algorithm == 'qlearning':
-            return self.q_learning(episode ,existing_agents, my_env)
+            return self.q_learning(episode, existing_agents, my_env)
 
-    def q_learning(self, episode , existing_agents , my_env):
+    def q_learning(self, episode, existing_agents, my_env):
         # initialize empty dictionary of arrays
+
         def update_env():
             traci.simulationStep()
             arv = traci.simulation.getArrivedIDList()
@@ -58,13 +60,14 @@ class SingleAgent():
 
             # ADD newly added cars as an agents
             for car_id in dep:
+
                 existing_agents.append(AutoVehicle.AutoVehicle(car_id))
 
             # Remove the arrived-to-destination cars
             for agent in existing_agents:
                 if agent.ID in arv:
                     existing_agents.remove(agent)
-            
+
             for agent in existing_agents:
                 try:
                     _ = traci.vehicle.getPosition(agent.ID)
@@ -79,13 +82,13 @@ class SingleAgent():
 
         def update_individual(state, reward, chosen_action, next_state):
             best_action = np.argmax(self.Q_i[f"{next_state}"])
-            self.Q_i[f"{state}"][chosen_action] = self.Q_i[f"{state}"][chosen_action] + self.alpha *\
+            self.Q_i[f"{state}"][chosen_action] = self.Q_i[f"{state}"][chosen_action] + self.alpha * \
                                                   (reward + self.gamma * self.Q_i[f"{next_state}"][best_action] -
                                                    self.Q_i[f"{state}"][chosen_action])
 
         def update_coordinated(state, reward, chosen_action, next_state):
             best_action = np.argmax(self.Q_I[f"{next_state}"])
-            self.Q_I[f"{state}"][chosen_action] = self.Q_I[f"{state}"][chosen_action] +\
+            self.Q_I[f"{state}"][chosen_action] = self.Q_I[f"{state}"][chosen_action] + \
                                                   self.alpha * (
                                                           reward + self.gamma * self.Q_I[f"{next_state}"][best_action] -
                                                           self.Q_I[f"{state}"][chosen_action])
@@ -93,24 +96,24 @@ class SingleAgent():
         def update_from_coordinated_to_individual(state, reward, chosen_action, next_state_1, next_state_2):
             best_action_1 = np.argmax(self.Q_i[f"{next_state_1}"])
             best_action_2 = np.argmax(self.Q_i.get(f"{next_state_2}", np.random.choice([0, 1, 2])))
-            self.Q_I[f"{state}"][chosen_action] = (1 - self.alpha) * self.Q_I[f"{state}"][chosen_action] + self.alpha *\
-                                                  ( reward + self.gamma * (self.Q_i[f"{next_state_1}"][best_action_1] \
-                                                                           + self.Q_i[f"{next_state_2}"][best_action_2]))
-
+            self.Q_I[f"{state}"][chosen_action] = (1 - self.alpha) * self.Q_I[f"{state}"][chosen_action] + self.alpha * \
+                                                  (reward + self.gamma * (self.Q_i[f"{next_state_1}"][best_action_1] \
+                                                                          + self.Q_i[f"{next_state_2}"][best_action_2]))
 
         def update_from_individual_to_coordinated(state, reward, chosen_action, next_state):
             best_action = np.argmax(self.Q_I[f"{next_state}"])
             # print(state)
-            self.Q_i[f"{state}"][chosen_action] = (1 - self.alpha) * self.Q_i[f"{state}"][chosen_action] + self.alpha *\
+            self.Q_i[f"{state}"][chosen_action] = (1 - self.alpha) * self.Q_i[f"{state}"][chosen_action] + self.alpha * \
                                                   (reward + self.gamma * 0.5 * (self.Q_I[f"{next_state}"][best_action]))
+
         self.epsilon = self.epsilon / episode
         if self.epsilon < self.min_epsilon:
             self.epsilon = self.min_epsilon
 
-        car_state_action_reward_nextState =[]
+        car_state_action_reward_nextState = []
 
         state_with_reward_dict = {}
-        print(len(self.env.intersectionAgentList))
+
         for car in self.env.intersectionAgentList:
             current_state = self.env.states[car.ID]
             in_joint_state_with = self.env.is_overlap(car)
@@ -133,7 +136,6 @@ class SingleAgent():
                 action = np.random.choice(np.arange(self.nA), p=prob)
                 car.isPrevIndividual = True
 
-
             if action == 0:
                 car.acc()
             elif action == 1:
@@ -143,46 +145,75 @@ class SingleAgent():
 
             state_with_reward_dict[car.ID] = (car, current_state, action, other_car_state)
 
-
         update_env()
+
+        step_reward = 0
+        step_waiting_time = 0
 
         for car in self.env.intersectionAgentList:
             try:
                 (car, current_state, action, other_car_state) = state_with_reward_dict[car.ID]
                 next_state = self.env.states[car.ID]
                 reward = self.env.get_agent_individual_reward(car)
-                car_state_action_reward_nextState.append((car, current_state, action, reward, next_state, other_car_state))
+                step_reward += reward
+                step_waiting_time += 0.5
+                car_state_action_reward_nextState.append(
+                    (car, current_state, action, reward, next_state, other_car_state))
             except:
                 t = 1
 
+        locked_count = 0
+        is_dead_lock = False
+        dead_lock_states = []
+        dead_lock_reward = -2000
         for car, current_state, action, reward, next_state, other_car_state in car_state_action_reward_nextState:
-            if(len(self.env.is_overlap(car)) == 0 and car.isPrevIndividual):
+            car.add_current_state(current_state)
+            if car.is_potential_dead_lock():
+                dead_lock_states.append(current_state)
+                locked_count += 1
+            if locked_count > 3:
+                is_dead_lock = True
+
+        for car, current_state, action, reward, next_state, other_car_state in car_state_action_reward_nextState:
+            if (len(self.env.is_overlap(car)) == 0 and car.isPrevIndividual):
                 # print("In individual and still in individual")
-                update_individual(current_state, reward, action, next_state)
+                if is_dead_lock and current_state in dead_lock_states:
+                    update_individual(current_state, dead_lock_reward, action, next_state)
+                else:
+                    update_individual(current_state, reward, action, next_state)
 
 
-            elif(len(self.env.is_overlap(car)) > 0 and car.isPrevIndividual):
+            elif (len(self.env.is_overlap(car)) > 0 and car.isPrevIndividual):
                 # print("In coordinated and switched to individual")
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
-                update_from_individual_to_coordinated(current_state,reward, action, coordinated_state)
+                if is_dead_lock and current_state in dead_lock_states:
+                    update_from_individual_to_coordinated(current_state, dead_lock_reward, action, coordinated_state)
+                else:
+                    update_from_individual_to_coordinated(current_state, reward, action, coordinated_state)
 
-            elif(len(self.env.is_overlap(car)) == 0 and not car.isPrevIndividual):
+            elif (len(self.env.is_overlap(car)) == 0 and not car.isPrevIndividual):
                 # print("In Individual and switched to coordinated")
                 next_state_1 = next_state
                 next_state_2 = other_car_state
-                update_from_coordinated_to_individual(current_state, reward, action, next_state_1, next_state_2)
+                if is_dead_lock and current_state in dead_lock_states:
+                    update_from_coordinated_to_individual(current_state, dead_lock_reward, action, next_state_1,
+                                                          next_state_2)
+                else:
+                    update_from_coordinated_to_individual(current_state, reward, action, next_state_1, next_state_2)
 
 
-            elif(len(self.env.is_overlap(car)) > 0 and not car.isPrevIndividual):
+            elif (len(self.env.is_overlap(car)) > 0 and not car.isPrevIndividual):
                 # print("In coordinated and still in coordinated")
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
-                update_coordinated(current_state,reward, action, coordinated_state)
+                if is_dead_lock and current_state in dead_lock_states:
+                    update_coordinated(current_state, dead_lock_reward, action, coordinated_state)
+                else:
+                    update_coordinated(current_state, reward, action, coordinated_state)
 
-        return self.Q_i, self.Q_I
-
+        return self.Q_i, self.Q_I, step_reward, step_waiting_time, is_dead_lock
 
 
