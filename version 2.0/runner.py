@@ -92,6 +92,7 @@ def run(episode):
     sys.stdout.flush()
 
 
+
 def get_options():
     optParser = optparse.OptionParser()
     optParser.add_option("--nogui", action="store_true",
@@ -124,7 +125,7 @@ if __name__ == "__main__":
     print((options.step))
     # for-loop
     # for i in range(100000000000,100000000001):
-    for i in range(8000):
+    for i in range(100):
         traci.start([sumoBinary, "-n", "2way-single-intersection/single-intersection.net.xml",
                                  "-r" , "2way-single-intersection/single-intersection-vhvh.rou.xml",
                                  "--tripinfo-output", "tripinfo.xml",
