@@ -123,7 +123,14 @@
     </edge>
 
     <tlLogic id="t" type="static" programID="0" offset="0">
-        <phase duration="33" state="GGGGGGGGGGGG"/>
+        <phase duration="33" state="GGrrrrGGrrrr"/>
+        <phase duration="2" state="yyrrrryyrrrr"/>
+        <phase duration="6" state="rrGrrrrrGrrr"/>
+        <phase duration="2" state="rryrrrrryrrr"/>
+        <phase duration="33" state="rrrGGrrrrGGr"/>
+        <phase duration="2" state="rrryyrrrryyr"/>
+        <phase duration="6" state="rrrrrGrrrrrG"/>
+        <phase duration="2" state="rrrrryrrrrry"/>
     </tlLogic>
 
     <junction id="e" type="priority" x="300.00" y="150.00" incLanes="t_e_0 t_e_1" intLanes=":e_0_0" shape="300.00,150.00 300.00,143.60 300.00,150.00">
