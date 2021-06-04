@@ -31,7 +31,7 @@ class AutoVehicle:
         self.queuelen = 0
         ################## Dicts  ######################
         self.speedDict = {0:0, 1: 1.75 , 2: 3.5 , 3: 5.25 , 4: 7} # Mapping from cell/step to m/s
-        self.maxspeed = 7 # We use m/s convention
+        self.maxspeed = 25.2 # We use m/s convention
         self.accSumo = 3.5 # m/s^2
         # self.set
         ################# Intersection dimensions ################

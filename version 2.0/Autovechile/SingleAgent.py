@@ -177,7 +177,8 @@ class SingleAgent():
         for car, current_state, action, reward, next_state, other_car_state in car_state_action_reward_nextState:
             if (len(self.env.is_overlap(car)) == 0 and car.isPrevIndividual):
                 # print("In individual and still in individual")
-                if is_dead_lock and current_state in dead_lock_states:
+                if is_dead_lock:
+                    print("in dead lock")
                     update_individual(current_state, dead_lock_reward, action, next_state)
                 else:
                     update_individual(current_state, reward, action, next_state)
@@ -188,7 +189,7 @@ class SingleAgent():
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
-                if is_dead_lock and current_state in dead_lock_states:
+                if is_dead_lock :
                     update_from_individual_to_coordinated(current_state, dead_lock_reward, action, coordinated_state)
                 else:
                     update_from_individual_to_coordinated(current_state, reward, action, coordinated_state)
@@ -197,7 +198,7 @@ class SingleAgent():
                 # print("In Individual and switched to coordinated")
                 next_state_1 = next_state
                 next_state_2 = other_car_state
-                if is_dead_lock and current_state in dead_lock_states:
+                if is_dead_lock:
                     update_from_coordinated_to_individual(current_state, dead_lock_reward, action, next_state_1,
                                                           next_state_2)
                 else:
@@ -209,7 +210,7 @@ class SingleAgent():
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
-                if is_dead_lock and current_state in dead_lock_states:
+                if is_dead_lock :
                     update_coordinated(current_state, dead_lock_reward, action, coordinated_state)
                 else:
                     update_coordinated(current_state, reward, action, coordinated_state)

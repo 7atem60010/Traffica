@@ -1,7 +1,7 @@
 import sys, os
 
 sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), 'tools'))
-
+import numpy as np
 import traci
 import math
 import random
@@ -92,7 +92,13 @@ class env():
         print("Global Reward")
 
     def get_agent_individual_reward(self, vehicle):
-        return -1 * (self.dT - vehicle.get_time_step_distance() / vehicle.maxspeed)
+        reward = -1 * (vehicle.get_time_step_distance()/vehicle.speedDict[vehicle.currentspeed] -
+                       vehicle.get_time_step_distance() / vehicle.maxspeed)
+        if np.isnan(reward):
+            reward = 0
+        elif np.isinf(reward):
+            reward = -2000
+        return reward
 
     def get_agent_coordinated_reward(self, cardIds):
         print("Coordinated agents reward")
