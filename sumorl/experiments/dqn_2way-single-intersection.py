@@ -7,6 +7,9 @@ if 'SUMO_HOME' in os.environ:
     sys.path.append(tools)
 else:
     sys.exit("Please declare the environment variable 'SUMO_HOME'")
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
 from sumo_rl import SumoEnvironment
 import traci
 
@@ -33,3 +36,4 @@ if __name__ == '__main__':
         verbose=1
     )
     model.learn(total_timesteps=100000)
+    model.save('model_1')

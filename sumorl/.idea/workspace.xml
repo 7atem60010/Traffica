@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5eb23a9c-167f-4405-9955-48fcafb2ee8b" name="Default Changelist" comment="Trained 150 episodes" />
+    <list default="true" id="5eb23a9c-167f-4405-9955-48fcafb2ee8b" name="Default Changelist" comment="Trained 150 episodes">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cache/2way-single-intersection/log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cache/2way-single-intersection/log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cache/2way-single-intersection/q_table_backupt" beforeDir="false" afterPath="$PROJECT_DIR$/cache/2way-single-intersection/q_table_backupt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cache/2way-single-intersection/q_table_t" beforeDir="false" afterPath="$PROJECT_DIR$/cache/2way-single-intersection/q_table_t" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/dqn_2way-single-intersection.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/dqn_2way-single-intersection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/plot.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,6 +75,9 @@
       <workItem from="1622757601684" duration="630000" />
       <workItem from="1622813181971" duration="11807000" />
       <workItem from="1622877405870" duration="3046000" />
+      <workItem from="1622913307449" duration="4133000" />
+      <workItem from="1622953737846" duration="5234000" />
+      <workItem from="1623011720749" duration="2014000" />
     </task>
     <task id="LOCAL-00001" summary="added caching q table">
       <created>1622749046426</created>
@@ -99,6 +109,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
