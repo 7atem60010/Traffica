@@ -52,10 +52,13 @@ class env():
         joint_agents = []
         R1 = [agent_asking.desired_cells[0][0], agent_asking.desired_cells[1][0], agent_asking.desired_cells[0][1],
               agent_asking.desired_cells[1][1]]
+        #agent_asking.UpdateStatus()
+        #print('R1:' ,agent_asking.cont_cells, agent_asking.currentspeed,agent_asking.desired_cells)
         for agent in self.intersectionAgentList:
             if agent.ID != car_id:
                 R2 = [agent.desired_cells[0][0], agent.desired_cells[1][0], agent.desired_cells[0][1],
                       agent.desired_cells[1][1]]
+                #print('R2:' ,agent.cont_cells , agent.currentspeed ,agent.desired_cells)
                 if self.isRectangleOverlap(R1, R2):
                     joint_agents.append(agent)
         return joint_agents

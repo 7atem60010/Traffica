@@ -182,6 +182,7 @@ class AutoVehicle:
             raise("Wrong value of V detected at cat",self.ID)
         # dc_x = math.ceil(dc * math.cos(angle))  if dc * math.cos(angle) >0  else math.floor(dc * math.cos(angle))
         # dc_y = math.ceil(dc * math.sin(angle))  if dc * math.sin(angle) >0  else math.floor(dc * math.sin(angle))
+        #print(angle)
         dc_x = round(dc * math.cos(angle))
         dc_y = round(dc * math.sin(angle))
         #print(dc,dc_x,dc_y)
@@ -189,8 +190,8 @@ class AutoVehicle:
         xmax += dc_x
         ymin += dc_y
         ymax += dc_y
-        xmin_,xmax_ =max(0, min([cell[0] for cell in cells])), min(_24, max([cell[0] for cell in cells]))
-        ymin_,ymax_ = max(0, min([cell[1] for cell in cells])), min(_24 ,max([cell[1] for cell in cells]))
+        xmin_,xmax_ =max(0, xmin), min(_24, xmax)
+        ymin_,ymax_ = max(0, ymin), min(_24 ,ymax)
         # desired_cells = [(xmin,ymin),(xmax,ymax)]
         desired_cells = [(xmin_, xmax_), (ymin_, ymax_)]
         self.cont_cells = container_cells

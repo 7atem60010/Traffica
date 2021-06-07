@@ -131,6 +131,9 @@ if __name__ == "__main__":
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--collision.mingap-factor", "0",
                                  "--collision.action","none",
+                                 "--collision.check-junctions","true",
+                                 # "--ignore-junction-blocker","1",
+                                 "--collision-output" , "collisions.sumocfg",
                                  "--step-length", ".5",
                                  "--time-to-teleport", "-1",
                                  "--time-to-teleport.highways", "-1"]
