@@ -49,6 +49,15 @@ class AutoVehicle:
 
 
         ###################################################################
+    def inRealIntersection(self):
+        TopLeft = (143.6 + self.extenstion,143.6 + self.extenstion)
+        BotRight = (156.40- self.extenstion, 156.40- self.extenstion)
+        self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
+        self.inter = False
+        if self.pos[0] > self.TopLeft[0] and  self.pos[0] < self.BotRight[0] and self.pos[1] > self.TopLeft[1] and  self.pos[1] < self.BotRight[1]:
+            self.inter = True
+        return self.inter
+
     def inIntersection(self):
         self.pos = traci.vehicle.getPosition(self.ID) #(x,y)
         self.inter = False
