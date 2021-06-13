@@ -57,8 +57,10 @@ def run(episode):
     except:
         average_waiting_time_dict = defaultdict(int)
 
-    episode_reward_dict[f"{episode}"] = episode_reward_sum / vehNr
-    average_waiting_time_dict[f"{episode}"] = waiting_time_sum / vehNr
+    print(f"Car counts is {vehNr} and those in the intersection {len(my_env.insersectionAgentSet)}")
+
+    episode_reward_dict[f"{episode}"] = episode_reward_sum / len(my_env.insersectionAgentSet)
+    average_waiting_time_dict[f"{episode}"] = waiting_time_sum / len(my_env.insersectionAgentSet)
 
     with open("./output/episode_reward_dict.pickle", "wb") as reward_dic_writer:
         pickle.dump(episode_reward_dict, reward_dic_writer)
@@ -72,21 +74,22 @@ def run(episode):
     with open("./output/Q_I_coordinated.pickle", "wb") as f2:
         pickle.dump(Q_I, f2)
 
-    df = pd.DataFrame([[episode, average_waiting_time] for episode, average_waiting_time in episode_reward_dict.items()],
+    df = pd.DataFrame([[episode, average_waiting_time] for episode, average_waiting_time in average_waiting_time_dict.items()],
                       columns=['Episode', 'Average Waiting Time'])
-    print(df.to_csv("./output/episode_waiting_time.csv"))
+    df.to_csv("./output/episode_waiting_time.csv")
 
-    df = pd.DataFrame([[episode, reward] for episode, reward in average_waiting_time_dict.items()],
+    df = pd.DataFrame([[episode, reward] for episode, reward in episode_reward_dict.items()],
                       columns=['Episode', 'Reward'])
-    print(df.to_csv("./output/episode_reward.csv"))
+    df.to_csv("./output/episode_reward.csv")
 
     df = pd.DataFrame([ [state, actions_rewards] for state, actions_rewards in Q_i.items()],  columns=['state', 'Actions Rewards'])
-    print(df.to_csv("./output/qtable.csv"))
+    df.to_csv("./output/qtable.csv")
 
     df = pd.DataFrame([[state, actions_rewards] for state, actions_rewards in Q_I.items()],
                       columns=['state', 'Actions Rewards'])
-    print(df.to_csv("./output/qtableCoordinated.csv"))
-
+    df.to_csv("./output/qtableCoordinated.csv")
+    if is_dead_lock:
+        print("With dead lock i reached the end. Bye Bye")
 
     traci.close()
     sys.stdout.flush()
@@ -124,13 +127,13 @@ if __name__ == "__main__":
         options.step = .1
     print((options.step))
     # for-loop
-    # for i in range(100000000000,100000000001):
-    for i in range(1000):
+    for i in range(100000000000,100000000001):
+    # for i in range(300):
         traci.start([sumoBinary, "-n", "2way-single-intersection/single-intersection.net.xml",
                                  "-r" , "2way-single-intersection/single-intersection-vhvh.rou.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--collision.mingap-factor", "0",
-                                 "--collision.action","none",
+                                 "--collision.action","remove",
                                  "--collision.check-junctions","true",
                                  # "--ignore-junction-blocker","1",
                                  "--collision-output" , "collisions.sumocfg",

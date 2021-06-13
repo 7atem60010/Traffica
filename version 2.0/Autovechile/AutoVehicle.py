@@ -44,7 +44,7 @@ class AutoVehicle:
         traci.vehicle.setAccel(self.ID , self.accl)
         self.L, self.W = traci.vehicle.getLength(self.ID), traci.vehicle.getWidth(self.ID)
         self.DoI = 0
-        self.max_len_old_keep = 10
+        self.max_len_old_keep = 70
         self.old_states = deque([], maxlen=self.max_len_old_keep)
 
 
@@ -74,7 +74,7 @@ class AutoVehicle:
         self.old_states.append(f"{current_state}")
 
     def is_potential_dead_lock(self):
-        return len(set(self.old_states)) == 1 and len(list(self.old_states)) > 8
+        return len(set(self.old_states)) == 1 and len(list(self.old_states)) > 69
 
     def getCells(self,lane_len,side_cells,intersection_width): #retracted
         x,y = traci.vehicle.getPosition(self.ID)
@@ -143,7 +143,7 @@ class AutoVehicle:
 
     def get_time_step_distance(self):
 
-        self.hot_update_pos()
+
         distance = np.sqrt((self._pos[0] - self._pos_old[0])**2+(self._pos[1] - self._pos_old[1])**2)
         return distance
 
@@ -189,6 +189,8 @@ class AutoVehicle:
             dc = max(math.ceil(v**2/2/a),math.ceil(v*self.dT+.5*a*self.dT))
         else:
             raise("Wrong value of V detected at cat",self.ID)
+        if self.speedDict[v] <= 0:
+            dc = 15
         # dc_x = math.ceil(dc * math.cos(angle))  if dc * math.cos(angle) >0  else math.floor(dc * math.cos(angle))
         # dc_y = math.ceil(dc * math.sin(angle))  if dc * math.sin(angle) >0  else math.floor(dc * math.sin(angle))
         #print(angle)
@@ -227,6 +229,13 @@ class AutoVehicle:
         traci.vehicle.slowDown(self.ID, self.speedDict[self.currentspeed], self.dT / 10)
         self.accl = 0
 
+
+    def get_time(self):
+        if self.speedDict[self.currentspeed] != 0:
+            time = self.get_time_step_distance() / self.speedDict[self.currentspeed]
+        else:
+            time = 1
+        return time
 
 
 

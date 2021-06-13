@@ -12,8 +12,8 @@ class env():
     def __init__(self):  # vehicle agent is an instant from Auto-vehicle class
         # self.ActionsList = ["ChangeLR", "ChangeLF", "fast", "slow", "stop", "DoNothing"]
         # self.ActionsDict = {"ChangeLR": 0, "ChangeLF": 1, "fast": 2, "slow": 3, "stop": 4, "DoNothing": 5}
-        self.TopLeft = (499.50, 499.50)
-        self.BotRight = (520.50, 520.50)
+        self.TopLeft = (143.6, 143.6)
+        self.BotRight = (156.40, 156.40)
         self.intersection_Xlen = self.BotRight[0] - self.TopLeft[0]
         self.intersection_Ylen = self.BotRight[1] - self.TopLeft[1]
         self.cells_per_side = 24
@@ -26,6 +26,7 @@ class env():
         self.ActionsDict = {"acc": 0, "dec": 1, "keep_going": 2}
 
         self.intersectionAgentList = []  # List of Cars in the intersection
+        self.insersectionAgentSet = set()
         self.overLap = []
         self.states = {}
 
@@ -35,6 +36,7 @@ class env():
             try:
                 if car.inIntersection():
                     self.intersectionAgentList.append(car)
+                    self.insersectionAgentSet.add(car)
                     car.UpdateStatus()
             except:
                 pass
@@ -99,8 +101,8 @@ class env():
                        vehicle.get_time_step_distance() / vehicle.maxspeed)
         if np.isnan(reward):
             reward = 0
-        elif np.isinf(reward):
-            reward = -2000
+        if np.isinf(reward):
+            reward = -1000
         return reward
 
     def get_agent_coordinated_reward(self, cardIds):

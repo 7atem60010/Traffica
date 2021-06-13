@@ -114,13 +114,10 @@ class SingleAgent():
 
         state_with_reward_dict = {}
 
-        print(self.env.intersectionAgentList)
 
         for car in self.env.intersectionAgentList:
             current_state = self.env.states[car.ID]
             in_joint_state_with = self.env.is_overlap(car)
-            #if len(in_joint_state_with)>0:
-            #print('JOINTED',in_joint_state_with)
 
             each_element_prob = self.epsilon / self.nA
             prob = [each_element_prob] * self.nA
@@ -162,11 +159,12 @@ class SingleAgent():
 
         for car in self.env.intersectionAgentList:
             try:
+                car.hot_update_pos()
                 (car, current_state, action, other_car_state) = state_with_reward_dict[car.ID]
                 next_state = self.env.states[car.ID]
                 reward = self.env.get_agent_individual_reward(car)
                 step_reward += reward
-                step_waiting_time += 0.5
+                step_waiting_time += car.get_time()
                 car_state_action_reward_nextState.append(
                     (car, current_state, action, reward, next_state, other_car_state))
             except:
@@ -175,27 +173,28 @@ class SingleAgent():
         locked_count = 0
         is_dead_lock = False
         dead_lock_states = []
-        dead_lock_reward = -2000
+        dead_lock_reward = -20000
         for car, current_state, action, reward, next_state, other_car_state in car_state_action_reward_nextState:
             car.add_current_state(current_state)
             if car.is_potential_dead_lock():
                 dead_lock_states.append(current_state)
                 locked_count += 1
-            if locked_count > 3:
+            if locked_count == len(self.env.intersectionAgentList):
                 is_dead_lock = True
 
         for car, current_state, action, reward, next_state, other_car_state in car_state_action_reward_nextState:
             if (len(self.env.is_overlap(car)) == 0 and car.isPrevIndividual):
-                print("In individual and still in individual")
+                # print("In individual and still in individual")
                 if is_dead_lock:
                     print("in dead lock")
+                    print(current_state)
                     update_individual(current_state, dead_lock_reward, action, next_state)
                 else:
                     update_individual(current_state, reward, action, next_state)
 
 
             elif (len(self.env.is_overlap(car)) > 0 and car.isPrevIndividual):
-                print("In coordinated and switched to individual")
+                # print("In coordinated and switched to individual")
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
@@ -205,7 +204,7 @@ class SingleAgent():
                     update_from_individual_to_coordinated(current_state, reward, action, coordinated_state)
 
             elif (len(self.env.is_overlap(car)) == 0 and not car.isPrevIndividual):
-                print("In Individual and switched to coordinated")
+                # print("In Individual and switched to coordinated")
                 next_state_1 = next_state
                 next_state_2 = other_car_state
                 if is_dead_lock:
@@ -216,7 +215,7 @@ class SingleAgent():
 
 
             elif (len(self.env.is_overlap(car)) > 0 and not car.isPrevIndividual):
-                print("In coordinated and still in coordinated")
+                # print("In coordinated and still in coordinated")
                 car_to_coordinate_with = self.env.is_overlap(car)[0]
                 car_to_coordinate_with_state = self.env.states[car_to_coordinate_with.ID]
                 coordinated_state = (next_state, car_to_coordinate_with_state)
@@ -224,6 +223,7 @@ class SingleAgent():
                     update_coordinated(current_state, dead_lock_reward, action, coordinated_state)
                 else:
                     update_coordinated(current_state, reward, action, coordinated_state)
+
 
         return self.Q_i, self.Q_I, step_reward, step_waiting_time, is_dead_lock
 

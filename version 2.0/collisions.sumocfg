@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 07 يون, 2021 05:52:13 م by Eclipse SUMO GUI Version v1_8_0+0922-7b2bbb9a60
+<!-- generated on 2021-06-10 09:43:25 by Eclipse SUMO GUI Version 1.9.2
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -18,7 +18,7 @@
     </time>
 
     <processing>
-        <collision.action value="none"/>
+        <collision.action value="remove"/>
         <collision.check-junctions value="true"/>
         <collision.mingap-factor value="0"/>
         <time-to-teleport value="-1"/>
@@ -26,7 +26,7 @@
     </processing>
 
     <traci_server>
-        <remote-port value="40511"/>
+        <remote-port value="54013"/>
     </traci_server>
 
     <gui_only>
@@ -37,4 +37,60 @@
 -->
 
 <collisions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/collision_file.xsd">
+    <collision time="20.00" type="junction" lane=":t_1_0" pos="7.71" collider="flow_ns.2" victim="flow_ew.1" colliderType="car@flow_ns.2" victimType="car@flow_ew.1" colliderSpeed="11.37" victimSpeed="12.28"/>
+    <collision time="24.00" type="junction" lane=":t_10_0" pos="5.76" collider="flow_we.2" victim="flow_ns.3" colliderType="car@flow_we.2" victimType="car@flow_ns.3" colliderSpeed="11.65" victimSpeed="11.82"/>
+    <collision time="34.00" type="junction" lane=":t_7_0" pos="5.04" collider="flow_sn.3" victim="flow_we.3" colliderType="car@flow_sn.3" victimType="car@flow_we.3" colliderSpeed="9.15" victimSpeed="11.46"/>
+    <collision time="68.00" type="junction" lane=":t_1_0" pos="7.05" collider="flow_ns.16" victim="flow_ew.8" colliderType="car@flow_ns.16" victimType="car@flow_ew.8" colliderSpeed="14.14" victimSpeed="15.17"/>
+    <collision time="81.50" type="junction" lane=":t_10_0" pos="8.47" collider="flow_we.10" victim="flow_ns.19" colliderType="car@flow_we.10" victimType="car@flow_ns.19" colliderSpeed="15.10" victimSpeed="11.78"/>
+    <collision time="96.50" type="junction" lane=":t_4_0" pos="4.80" collider="flow_ew.12" victim="flow_sn.12" colliderType="car@flow_ew.12" victimType="car@flow_sn.12" colliderSpeed="13.97" victimSpeed="15.37"/>
+    <collision time="97.00" type="junction" lane=":t_10_0" pos="7.46" collider="flow_we.12" victim="flow_ns.24" colliderType="car@flow_we.12" victimType="car@flow_ns.24" colliderSpeed="13.52" victimSpeed="13.73"/>
+    <collision time="106.00" type="junction" lane=":t_1_0" pos="10.60" collider="flow_ns.26" victim="flow_ew.13" colliderType="car@flow_ns.26" victimType="car@flow_ew.13" colliderSpeed="12.26" victimSpeed="12.69"/>
+    <collision time="111.50" type="junction" lane=":t_7_0" pos="5.89" collider="flow_sn.14" victim="flow_we.14" colliderType="car@flow_sn.14" victimType="car@flow_we.14" colliderSpeed="13.42" victimSpeed="14.47"/>
+    <collision time="133.00" type="junction" lane=":t_1_0" pos="6.03" collider="flow_ns.34" victim="flow_ew.17" colliderType="car@flow_ns.34" victimType="car@flow_ew.17" colliderSpeed="13.35" victimSpeed="12.71"/>
+    <collision time="183.00" type="junction" lane=":t_4_0" pos="6.91" collider="flow_ew.24" victim="flow_sn.24" colliderType="car@flow_ew.24" victimType="car@flow_sn.24" colliderSpeed="14.09" victimSpeed="13.55"/>
+    <collision time="190.00" type="junction" lane=":t_7_0" pos="7.05" collider="flow_sn.25" victim="flow_we.25" colliderType="car@flow_sn.25" victimType="car@flow_we.25" colliderSpeed="14.35" victimSpeed="15.36"/>
+    <collision time="204.50" type="junction" lane=":t_4_0" pos="4.70" collider="flow_ew.27" victim="flow_sn.27" colliderType="car@flow_ew.27" victimType="car@flow_sn.27" colliderSpeed="14.04" victimSpeed="14.23"/>
+    <collision time="221.00" type="junction" lane=":t_10_0" pos="9.60" collider="flow_we.29" victim="flow_ns.57" colliderType="car@flow_we.29" victimType="car@flow_ns.57" colliderSpeed="5.17" victimSpeed="5.93"/>
+    <collision time="233.00" type="junction" lane=":t_4_0" pos="6.21" collider="flow_ew.31" victim="flow_sn.31" colliderType="car@flow_ew.31" victimType="car@flow_sn.31" colliderSpeed="14.82" victimSpeed="16.24"/>
+    <collision time="262.00" type="junction" lane=":t_4_0" pos="6.88" collider="flow_ew.35" victim="flow_sn.35" colliderType="car@flow_ew.35" victimType="car@flow_sn.35" colliderSpeed="14.17" victimSpeed="14.97"/>
+    <collision time="293.50" type="junction" lane=":t_1_0" pos="5.19" collider="flow_ns.78" victim="flow_ew.39" colliderType="car@flow_ns.78" victimType="car@flow_ew.39" colliderSpeed="7.43" victimSpeed="12.09"/>
+    <collision time="299.00" type="junction" lane=":t_1_0" pos="6.57" collider="flow_ns.80" victim="flow_ew.40" colliderType="car@flow_ns.80" victimType="car@flow_ew.40" colliderSpeed="11.94" victimSpeed="12.78"/>
+    <collision time="306.50" type="junction" lane=":t_10_0" pos="10.58" collider="flow_we.41" victim="flow_ns.82" colliderType="car@flow_we.41" victimType="car@flow_ns.82" colliderSpeed="13.23" victimSpeed="12.63"/>
+    <collision time="312.50" type="junction" lane=":t_7_0" pos="7.82" collider="flow_sn.42" victim="flow_we.42" colliderType="car@flow_sn.42" victimType="car@flow_we.42" colliderSpeed="14.30" victimSpeed="15.29"/>
+    <collision time="320.50" type="junction" lane=":t_1_0" pos="9.85" collider="flow_ns.86" victim="flow_ew.43" colliderType="car@flow_ns.86" victimType="car@flow_ew.43" colliderSpeed="11.43" victimSpeed="13.42"/>
+    <collision time="321.00" type="junction" lane=":t_7_0" pos="5.20" collider="flow_sn.43" victim="flow_we.43" colliderType="car@flow_sn.43" victimType="car@flow_we.43" colliderSpeed="9.53" victimSpeed="13.44"/>
+    <collision time="348.50" type="junction" lane=":t_7_0" pos="8.52" collider="flow_sn.47" victim="flow_we.47" colliderType="car@flow_sn.47" victimType="car@flow_we.47" colliderSpeed="14.33" victimSpeed="15.05"/>
+    <collision time="357.00" type="junction" lane=":t_4_0" pos="10.88" collider="flow_ew.48" victim="flow_sn.48" colliderType="car@flow_ew.48" victimType="car@flow_sn.48" colliderSpeed="11.54" victimSpeed="12.48"/>
+    <collision time="376.00" type="junction" lane=":t_1_0" pos="10.19" collider="flow_ns.101" victim="flow_ew.51" colliderType="car@flow_ns.101" victimType="car@flow_ew.51" colliderSpeed="12.08" victimSpeed="17.94"/>
+    <collision time="378.50" type="junction" lane=":t_7_0" pos="10.90" collider="flow_sn.51" victim="flow_we.51" colliderType="car@flow_sn.51" victimType="car@flow_we.51" colliderSpeed="13.37" victimSpeed="12.68"/>
+    <collision time="384.50" type="junction" lane=":t_4_0" pos="9.22" collider="flow_ew.52" victim="flow_sn.52" colliderType="car@flow_ew.52" victimType="car@flow_sn.52" colliderSpeed="14.31" victimSpeed="14.27"/>
+    <collision time="393.50" type="junction" lane=":t_4_0" pos="9.97" collider="flow_ew.53" victim="flow_sn.53" colliderType="car@flow_ew.53" victimType="car@flow_sn.53" colliderSpeed="12.63" victimSpeed="12.08"/>
+    <collision time="399.50" type="junction" lane=":t_1_0" pos="5.16" collider="flow_ns.108" victim="flow_ew.54" colliderType="car@flow_ns.108" victimType="car@flow_ew.54" colliderSpeed="13.43" victimSpeed="14.55"/>
+    <collision time="405.00" type="junction" lane=":t_4_0" pos="14.80" collider="flow_ew.55" victim="flow_ns.109" colliderType="car@flow_ew.55" victimType="car@flow_ns.109" colliderSpeed="16.57" victimSpeed="9.91"/>
+    <collision time="422.00" type="junction" lane=":t_4_0" pos="5.87" collider="flow_ew.57" victim="flow_sn.57" colliderType="car@flow_ew.57" victimType="car@flow_sn.57" colliderSpeed="12.16" victimSpeed="12.23"/>
+    <collision time="450.00" type="junction" lane=":t_4_0" pos="7.79" collider="flow_ew.61" victim="flow_sn.61" colliderType="car@flow_ew.61" victimType="car@flow_sn.61" colliderSpeed="13.57" victimSpeed="14.62"/>
+    <collision time="480.50" type="junction" lane=":t_7_0" pos="8.93" collider="flow_sn.65" victim="flow_we.65" colliderType="car@flow_sn.65" victimType="car@flow_we.65" colliderSpeed="4.52" victimSpeed="4.36"/>
+    <collision time="486.50" type="junction" lane=":t_1_0" pos="10.01" collider="flow_ns.132" victim="flow_ew.66" colliderType="car@flow_ns.132" victimType="car@flow_ew.66" colliderSpeed="13.29" victimSpeed="12.67"/>
+    <collision time="502.00" type="junction" lane=":t_7_0" pos="7.46" collider="flow_sn.68" victim="flow_we.68" colliderType="car@flow_sn.68" victimType="car@flow_we.68" colliderSpeed="11.98" victimSpeed="11.66"/>
+    <collision time="557.00" type="junction" lane=":t_10_0" pos="8.77" collider="flow_we.76" victim="flow_ns.151" colliderType="car@flow_we.76" victimType="car@flow_ns.151" colliderSpeed="9.38" victimSpeed="11.52"/>
+    <collision time="561.50" type="junction" lane=":t_1_0" pos="7.51" collider="flow_ns.153" victim="flow_ew.76" colliderType="car@flow_ns.153" victimType="car@flow_ew.76" colliderSpeed="11.53" victimSpeed="7.40"/>
+    <collision time="586.00" type="junction" lane=":t_7_0" pos="7.05" collider="flow_sn.80" victim="flow_we.80" colliderType="car@flow_sn.80" victimType="car@flow_we.80" colliderSpeed="14.34" victimSpeed="14.98"/>
+    <collision time="594.50" type="junction" lane=":t_7_0" pos="10.38" collider="flow_sn.81" victim="flow_we.81" colliderType="car@flow_sn.81" victimType="car@flow_we.81" colliderSpeed="13.21" victimSpeed="14.07"/>
+    <collision time="615.50" type="junction" lane=":t_4_0" pos="5.14" collider="flow_ew.84" victim="flow_sn.84" colliderType="car@flow_ew.84" victimType="car@flow_sn.84" colliderSpeed="13.37" victimSpeed="12.86"/>
+    <collision time="637.00" type="junction" lane=":t_1_0" pos="10.93" collider="flow_ns.173" victim="flow_ew.87" colliderType="car@flow_ns.173" victimType="car@flow_ew.87" colliderSpeed="8.68" victimSpeed="12.64"/>
+    <collision time="642.50" type="junction" lane=":t_10_0" pos="10.11" collider="flow_we.88" victim="flow_ns.175" colliderType="car@flow_we.88" victimType="car@flow_ns.175" colliderSpeed="17.06" victimSpeed="9.51"/>
+    <collision time="658.50" type="junction" lane=":t_10_0" pos="7.40" collider="flow_we.90" victim="flow_ns.180" colliderType="car@flow_we.90" victimType="car@flow_ns.180" colliderSpeed="13.56" victimSpeed="13.41"/>
+    <collision time="680.50" type="junction" lane=":t_7_0" pos="7.75" collider="flow_sn.93" victim="flow_we.93" colliderType="car@flow_sn.93" victimType="car@flow_we.93" colliderSpeed="13.53" victimSpeed="14.60"/>
+    <collision time="687.50" type="junction" lane=":t_1_0" pos="9.79" collider="flow_ns.188" victim="flow_ew.94" colliderType="car@flow_ns.188" victimType="car@flow_ew.94" colliderSpeed="10.23" victimSpeed="12.64"/>
+    <collision time="688.00" type="junction" lane=":t_7_0" pos="7.20" collider="flow_sn.94" victim="flow_we.94" colliderType="car@flow_sn.94" victimType="car@flow_we.94" colliderSpeed="12.92" victimSpeed="10.25"/>
+    <collision time="695.00" type="junction" lane=":t_1_0" pos="9.98" collider="flow_ns.190" victim="flow_ew.95" colliderType="car@flow_ns.190" victimType="car@flow_ew.95" colliderSpeed="13.28" victimSpeed="11.96"/>
+    <collision time="715.50" type="junction" lane=":t_1_0" pos="6.96" collider="flow_ns.196" victim="flow_ew.98" colliderType="car@flow_ns.196" victimType="car@flow_ew.98" colliderSpeed="14.85" victimSpeed="14.36"/>
+    <collision time="716.00" type="junction" lane=":t_7_0" pos="8.87" collider="flow_sn.98" victim="flow_we.98" colliderType="car@flow_sn.98" victimType="car@flow_we.98" colliderSpeed="14.30" victimSpeed="14.29"/>
+    <collision time="722.50" type="junction" lane=":t_7_0" pos="9.81" collider="flow_sn.99" victim="flow_we.99" colliderType="car@flow_sn.99" victimType="car@flow_we.99" colliderSpeed="15.23" victimSpeed="16.21"/>
+    <collision time="725.00" type="junction" lane=":t_1_0" pos="6.11" collider="flow_ns.198" victim="flow_ew.99" colliderType="car@flow_ns.198" victimType="car@flow_ew.99" colliderSpeed="11.67" victimSpeed="12.84"/>
+    <collision time="731.50" type="junction" lane=":t_7_0" pos="8.19" collider="flow_sn.100" victim="flow_we.100" colliderType="car@flow_sn.100" victimType="car@flow_we.100" colliderSpeed="8.21" victimSpeed="11.45"/>
+    <collision time="738.00" type="junction" lane=":t_7_0" pos="10.48" collider="flow_sn.101" victim="flow_we.101" colliderType="car@flow_sn.101" victimType="car@flow_we.101" colliderSpeed="12.14" victimSpeed="12.69"/>
+    <collision time="745.00" type="junction" lane=":t_7_0" pos="10.67" collider="flow_sn.102" victim="flow_we.102" colliderType="car@flow_sn.102" victimType="car@flow_we.102" colliderSpeed="13.87" victimSpeed="13.47"/>
+    <collision time="754.00" type="junction" lane=":t_1_0" pos="5.99" collider="flow_ns.206" victim="flow_ew.103" colliderType="car@flow_ns.206" victimType="car@flow_ew.103" colliderSpeed="7.93" victimSpeed="12.65"/>
+    <collision time="760.00" type="junction" lane=":t_10_0" pos="6.43" collider="flow_we.104" victim="flow_ns.208" colliderType="car@flow_we.104" victimType="car@flow_ns.208" colliderSpeed="7.94" victimSpeed="12.29"/>
 </collisions>
