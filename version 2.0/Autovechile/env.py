@@ -98,7 +98,7 @@ class env():
 
     def get_agent_individual_reward(self, vehicle):
         reward = -1 * (vehicle.get_time_step_distance()/vehicle.speedDict[vehicle.currentspeed] -
-                       vehicle.get_time_step_distance() / vehicle.maxspeed)
+                       vehicle.get_time_step_distance() / vehicle.maxspeed) - 10 * vehicle.queuelen
         if np.isnan(reward):
             reward = 0
         if np.isinf(reward):

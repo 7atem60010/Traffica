@@ -190,7 +190,7 @@ class AutoVehicle:
         else:
             raise("Wrong value of V detected at cat",self.ID)
         if self.speedDict[v] <= 0:
-            dc = 15
+            dc = 10
         # dc_x = math.ceil(dc * math.cos(angle))  if dc * math.cos(angle) >0  else math.floor(dc * math.cos(angle))
         # dc_y = math.ceil(dc * math.sin(angle))  if dc * math.sin(angle) >0  else math.floor(dc * math.sin(angle))
         #print(angle)
